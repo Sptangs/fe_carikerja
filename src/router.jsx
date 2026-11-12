@@ -1,48 +1,68 @@
+import { lazy, Suspense } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import PublicLayout from './layouts/PublicLayout'
-import AppLayout from './layouts/AppLayout'
-import AdminLayout from './layouts/AdminLayout'
-import JobSeekerLayout from './layouts/JobSeekerLayout'
 import RequireRole from './auth/RequireRole'
-import LandingPage from './pages/public/LandingPage'
-import ForCompaniesPage from './pages/public/ForCompaniesPage'
-import JobListPage from './pages/public/JobListPage'
-import JobDetailPage from './pages/public/JobDetailPage'
-import LoginPage from './pages/auth/LoginPage'
-import RegisterPage from './pages/auth/RegisterPage'
-import JobSeekerDashboardPage from './pages/job-seeker/DashboardPage'
-import JobSeekerJobListPage from './pages/job-seeker/JobListPage'
-import JobSeekerJobDetailPage from './pages/job-seeker/JobDetailPage'
-import ApplicationsPage from './pages/job-seeker/ApplicationsPage'
-import JobSeekerProfilePage from './pages/job-seeker/ProfilePage'
-import ApplyPage from './pages/job-seeker/ApplyPage'
-import CompanyDashboardPage from './pages/company/DashboardPage'
-import CompanyProfilePage from './pages/company/ProfilePage'
-import CompanyJobListPage from './pages/company/JobListPage'
-import CompanyJobFormPage from './pages/company/JobFormPage'
-import ApplicantsPage from './pages/company/ApplicantsPage'
-import AdminDashboardPage from './pages/admin/DashboardPage'
-import UserListPage from './pages/admin/UserListPage'
-import UserDetailPage from './pages/admin/UserDetailPage'
-import UserCreatePage from './pages/admin/UserCreatePage'
-import NotFoundPage from './pages/NotFoundPage'
-import ForbiddenPage from './pages/ForbiddenPage'
+
+const PublicLayout = lazy(() => import('./layouts/PublicLayout'))
+const AppLayout = lazy(() => import('./layouts/AppLayout'))
+const AdminLayout = lazy(() => import('./layouts/AdminLayout'))
+const JobSeekerLayout = lazy(() => import('./layouts/JobSeekerLayout'))
+const LandingPage = lazy(() => import('./pages/public/LandingPage'))
+const ForCompaniesPage = lazy(() => import('./pages/public/ForCompaniesPage'))
+const JobListPage = lazy(() => import('./pages/public/JobListPage'))
+const JobDetailPage = lazy(() => import('./pages/public/JobDetailPage'))
+const LoginPage = lazy(() => import('./pages/auth/LoginPage'))
+const RegisterPage = lazy(() => import('./pages/auth/RegisterPage'))
+const JobSeekerDashboardPage = lazy(() => import('./pages/job-seeker/DashboardPage'))
+const JobSeekerJobListPage = lazy(() => import('./pages/job-seeker/JobListPage'))
+const JobSeekerJobDetailPage = lazy(() => import('./pages/job-seeker/JobDetailPage'))
+const ApplicationsPage = lazy(() => import('./pages/job-seeker/ApplicationsPage'))
+const JobSeekerProfilePage = lazy(() => import('./pages/job-seeker/ProfilePage'))
+const ApplyPage = lazy(() => import('./pages/job-seeker/ApplyPage'))
+const CompanyDashboardPage = lazy(() => import('./pages/company/DashboardPage'))
+const CompanyProfilePage = lazy(() => import('./pages/company/ProfilePage'))
+const CompanyJobListPage = lazy(() => import('./pages/company/JobListPage'))
+const CompanyJobFormPage = lazy(() => import('./pages/company/JobFormPage'))
+const ApplicantsPage = lazy(() => import('./pages/company/ApplicantsPage'))
+const AdminDashboardPage = lazy(() => import('./pages/admin/DashboardPage'))
+const UserListPage = lazy(() => import('./pages/admin/UserListPage'))
+const UserDetailPage = lazy(() => import('./pages/admin/UserDetailPage'))
+const UserCreatePage = lazy(() => import('./pages/admin/UserCreatePage'))
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage'))
+const ForbiddenPage = lazy(() => import('./pages/ForbiddenPage'))
+
+function RouteLoadingFallback() {
+  return (
+    <main
+      className="grid min-h-svh place-items-center bg-[#f3efe4] px-4 text-[#10251f]"
+      aria-busy="true"
+    >
+      <div role="status" aria-live="polite" className="flex items-center gap-3">
+        <span
+          aria-hidden="true"
+          className="h-5 w-5 animate-spin rounded-full border-2 border-[#e3ddcf] border-t-[#e8623a] motion-reduce:animate-none"
+        />
+        <span className="text-sm font-medium">Memuat halaman...</span>
+      </div>
+    </main>
+  )
+}
 
 export default function AppRouter() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route element={<PublicLayout />}>
+      <Suspense fallback={<RouteLoadingFallback />}>
+        <Routes>
+          <Route element={<PublicLayout />}>
           <Route path="/" element={<LandingPage />} />
           <Route path="/for-companies" element={<ForCompaniesPage />} />
           <Route path="/jobs" element={<JobListPage />} />
           <Route path="/jobs/:id" element={<JobDetailPage />} />
           <Route path="/forbidden" element={<ForbiddenPage />} />
           <Route path="*" element={<NotFoundPage />} />
-        </Route>
+          </Route>
 
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
 
         <Route
           element={
@@ -86,7 +106,8 @@ export default function AppRouter() {
           <Route path="/admin/users/new" element={<UserCreatePage />} />
           <Route path="/admin/users/:id" element={<UserDetailPage />} />
         </Route>
-      </Routes>
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   )
 }
