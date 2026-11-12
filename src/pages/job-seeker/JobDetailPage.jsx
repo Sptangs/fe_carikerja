@@ -34,7 +34,8 @@ export default function JobDetailPage() {
 
   const job = data?.job ?? data
   const hasApplied = Boolean(data?.has_applied)
-  const company = job?.company?.name ?? job?.company_name ?? 'Perusahaan'
+  const company =
+    job?.company?.company_name ?? job?.company?.name ?? job?.company_name ?? 'Perusahaan'
   const requirements = getRequirements(job?.requirements)
 
   if (loading) {

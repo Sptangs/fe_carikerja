@@ -35,7 +35,8 @@ export default function JobDetailPage() {
   const { data, loading, error } = useApi(`/api/jobs/${id}`)
 
   const job = data?.job ?? data
-  const company = job?.company?.name ?? job?.company_name ?? 'Perusahaan'
+  const company =
+    job?.company?.company_name ?? job?.company?.name ?? job?.company_name ?? 'Perusahaan'
   const requirements = getRequirements(job?.requirements)
 
   if (loading) {

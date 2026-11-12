@@ -87,6 +87,13 @@ export function AuthProvider({ children }) {
     [applySession],
   )
 
+  const refreshUser = useCallback(async () => {
+    const payload = await apiClient('/api/user')
+    const nextUser = payload?.data ?? payload
+    setUser(nextUser)
+    return nextUser
+  }, [])
+
   const logout = useCallback(async () => {
     try {
       if (getToken()) {
@@ -108,8 +115,9 @@ export function AuthProvider({ children }) {
       login,
       register,
       logout,
+      refreshUser,
     }),
-    [user, token, restoring, login, register, logout],
+    [user, token, restoring, login, register, logout, refreshUser],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

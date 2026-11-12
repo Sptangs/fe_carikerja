@@ -208,7 +208,9 @@ export default function DashboardPage() {
                         {application.job?.title ?? 'Lowongan'}
                       </p>
                       <p className="mt-0.5 truncate text-xs text-[#6b7671]">
-                        {application.job?.company?.name ?? 'Perusahaan'}
+                        {application.job?.company?.company_name ??
+                          application.job?.company?.name ??
+                          'Perusahaan'}
                       </p>
                     </div>
                     <StatusBadge status={application.status} />

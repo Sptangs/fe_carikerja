@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/useAuth'
 import {
@@ -15,7 +15,6 @@ const NAV_ITEMS = [
   { to: '/job-seeker/dashboard', label: 'Beranda', icon: IconDashboard, end: true },
   { to: '/job-seeker/jobs', label: 'Cari Lowongan', icon: IconSearch },
   { to: '/job-seeker/applications', label: 'Lamaran Saya', icon: IconFileText },
-  { to: '/job-seeker/profile', label: 'Profil & CV', icon: IconUser },
 ]
 
 function getInitials(name = '') {
@@ -28,12 +27,36 @@ export default function JobSeekerLayout() {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
   const [menuOpen, setMenuOpen] = useState(false)
+  const [accountOpen, setAccountOpen] = useState(false)
+  const accountRef = useRef(null)
 
   const initials = getInitials(user?.name)
   const year = new Date().getFullYear()
 
+  useEffect(() => {
+    if (!accountOpen) return
+
+    function handlePointerDown(event) {
+      if (accountRef.current && !accountRef.current.contains(event.target)) {
+        setAccountOpen(false)
+      }
+    }
+
+    function handleKeyDown(event) {
+      if (event.key === 'Escape') setAccountOpen(false)
+    }
+
+    document.addEventListener('mousedown', handlePointerDown)
+    document.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.removeEventListener('mousedown', handlePointerDown)
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [accountOpen])
+
   async function handleLogout() {
     setMenuOpen(false)
+    setAccountOpen(false)
     await logout()
     navigate('/login', { replace: true })
   }
@@ -79,23 +102,66 @@ export default function JobSeekerLayout() {
           </nav>
 
           <div className="ml-auto flex items-center gap-2 sm:gap-3">
-            <div className="hidden items-center gap-2.5 rounded-full border border-[#e3ddcf] bg-white/70 py-1.5 pl-1.5 pr-4 sm:flex">
-              <span className="grid h-8 w-8 place-items-center rounded-full bg-[#0f2a23] text-xs font-bold text-[#f3efe4]">
-                {initials}
-              </span>
-              <span className="max-w-[9rem] truncate text-xs font-semibold">
-                {user?.name ?? 'Pencari Kerja'}
-              </span>
-            </div>
+            <div ref={accountRef} className="relative hidden sm:block">
+              <button
+                type="button"
+                onClick={() => setAccountOpen((value) => !value)}
+                aria-haspopup="menu"
+                aria-expanded={accountOpen}
+                aria-label="Informasi akun"
+                className="flex items-center gap-2.5 rounded-full border border-[#e3ddcf] bg-white/70 py-1.5 pl-1.5 pr-3 text-left transition hover:border-[#0f2a23]/30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e8623a]"
+              >
+                <span className="grid h-8 w-8 place-items-center rounded-full bg-[#0f2a23] text-xs font-bold text-[#f3efe4]">
+                  {initials}
+                </span>
+                <span className="max-w-[9rem] truncate text-xs font-semibold">
+                  {user?.name ?? 'Pencari Kerja'}
+                </span>
+                <span aria-hidden="true" className="text-[10px] text-[#7a857f]">
+                  ▾
+                </span>
+              </button>
 
-            <button
-              type="button"
-              onClick={handleLogout}
-              className="inline-flex items-center gap-2 rounded-full border border-[#e3ddcf] bg-white/60 px-3 py-2 text-xs font-semibold text-[#10251f]/70 transition hover:border-[#e8623a]/50 hover:text-[#e8623a] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e8623a] sm:px-4"
-            >
-              <IconLogout className="h-4 w-4" />
-              <span className="hidden sm:inline">Keluar</span>
-            </button>
+              {accountOpen ? (
+                <div
+                  role="menu"
+                  aria-label="Informasi akun"
+                  className="absolute right-0 z-50 mt-2 w-64 rounded-2xl border border-[#e3ddcf] bg-white p-2 shadow-[0_28px_60px_-36px_rgba(16,37,31,0.55)]"
+                >
+                  <div className="border-b border-[#ece7db] px-3 py-3">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#7a857f]">
+                      Informasi akun
+                    </p>
+                    <p className="mt-1 truncate text-sm font-semibold text-[#10251f]">
+                      {user?.name ?? 'Pencari Kerja'}
+                    </p>
+                    {user?.email ? (
+                      <p className="truncate text-xs text-[#6b7671]">{user.email}</p>
+                    ) : null}
+                  </div>
+
+                  <Link
+                    to="/job-seeker/profile"
+                    role="menuitem"
+                    onClick={() => setAccountOpen(false)}
+                    className="mt-1 flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-[#10251f]/75 transition hover:bg-[#0f2a23]/5 hover:text-[#10251f] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e8623a]"
+                  >
+                    <IconUser className="h-4 w-4" />
+                    Profil & CV
+                  </Link>
+
+                  <button
+                    type="button"
+                    role="menuitem"
+                    onClick={handleLogout}
+                    className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-[#10251f]/75 transition hover:bg-[#e8623a]/10 hover:text-[#e8623a] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e8623a]"
+                  >
+                    <IconLogout className="h-4 w-4" />
+                    Keluar
+                  </button>
+                </div>
+              ) : null}
+            </div>
 
             <button
               type="button"
@@ -133,6 +199,31 @@ export default function JobSeekerLayout() {
                   </NavLink>
                 )
               })}
+
+              <div className="mt-2 space-y-1 border-t border-[#e3ddcf] pt-2">
+                <NavLink
+                  to="/job-seeker/profile"
+                  onClick={() => setMenuOpen(false)}
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold transition ${
+                      isActive
+                        ? 'bg-[#0f2a23] text-[#f3efe4]'
+                        : 'text-[#10251f]/70 hover:bg-[#0f2a23]/5'
+                    }`
+                  }
+                >
+                  <IconUser className="h-5 w-5 shrink-0" />
+                  Profil & CV
+                </NavLink>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-[#10251f]/70 transition hover:bg-[#e8623a]/10 hover:text-[#e8623a]"
+                >
+                  <IconLogout className="h-5 w-5 shrink-0" />
+                  Keluar
+                </button>
+              </div>
             </nav>
           </div>
         ) : null}
@@ -161,6 +252,9 @@ export default function JobSeekerLayout() {
                 {item.label}
               </Link>
             ))}
+            <Link to="/job-seeker/profile" className="transition hover:text-[#f3efe4]">
+              Profil & CV
+            </Link>
           </div>
         </div>
         <div className="border-t border-white/10">

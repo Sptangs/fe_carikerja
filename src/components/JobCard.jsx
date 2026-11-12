@@ -11,7 +11,7 @@ const EMPLOYMENT_LABELS = {
 }
 
 function getCompanyName(job) {
-  return job.company?.name ?? job.company_name ?? 'Perusahaan'
+  return job.company?.company_name ?? job.company?.name ?? job.company_name ?? 'Perusahaan'
 }
 
 function getSalary(job) {
