@@ -1,3 +1,5 @@
+import { clearToken, getToken } from './token'
+
 const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? ''
 
 export class ApiError extends Error {
@@ -9,10 +11,6 @@ export class ApiError extends Error {
   }
 }
 
-function readToken() {
-  return sessionStorage.getItem('auth_token')
-}
-
 export async function apiClient(path, options = {}) {
   const { method = 'GET', body, headers = {}, raw = false } = options
   const isFormData = typeof FormData !== 'undefined' && body instanceof FormData
@@ -22,7 +20,7 @@ export async function apiClient(path, options = {}) {
     headers: {
       Accept: 'application/json',
       ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
-      ...(readToken() ? { Authorization: `Bearer ${readToken()}` } : {}),
+      ...(getToken() ? { Authorization: `Bearer ${getToken()}` } : {}),
       ...headers,
     },
     body: isFormData ? body : body !== undefined ? JSON.stringify(body) : undefined,
@@ -38,7 +36,7 @@ export async function apiClient(path, options = {}) {
   const payload = await response.json().catch(() => null)
 
   if (response.status === 401) {
-    sessionStorage.removeItem('auth_token')
+    clearToken()
     window.dispatchEvent(new Event('auth:unauthorized'))
   }
 

@@ -5,7 +5,11 @@ export default function FormField({ label, htmlFor, error, hint, children }) {
         {label}
       </label>
       {children}
-      {hint ? <p className="text-xs text-slate-500">{hint}</p> : null}
+      {hint ? (
+        <p id={`${htmlFor}-hint`} className="text-xs text-slate-500">
+          {hint}
+        </p>
+      ) : null}
       {error ? (
         <p id={`${htmlFor}-error`} className="text-xs text-rose-600">
           {error}

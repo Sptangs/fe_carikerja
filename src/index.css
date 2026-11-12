@@ -1,9 +1,66 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif;
+}
+
 body {
   margin: 0;
   min-height: 100svh;
   background-color: #f8fafc;
   color: #0f172a;
-  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+  font-family: var(--font-sans);
+}
+
+@keyframes auth-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.auth-rise {
+  animation: auth-rise 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+@keyframes public-rise {
+  from {
+    opacity: 0;
+    transform: translateY(26px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes public-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(var(--tilt, 0deg));
+  }
+  50% {
+    transform: translateY(-12px) rotate(var(--tilt, 0deg));
+  }
+}
+
+.public-rise {
+  animation: public-rise 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+.public-float {
+  animation: public-float 7s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-rise,
+  .public-rise,
+  .public-float {
+    animation: none;
+  }
 }

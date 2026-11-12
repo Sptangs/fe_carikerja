@@ -1,8 +1,11 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import PublicLayout from './layouts/PublicLayout'
 import AppLayout from './layouts/AppLayout'
+import AdminLayout from './layouts/AdminLayout'
+import JobSeekerLayout from './layouts/JobSeekerLayout'
 import RequireRole from './auth/RequireRole'
 import LandingPage from './pages/public/LandingPage'
+import ForCompaniesPage from './pages/public/ForCompaniesPage'
 import JobListPage from './pages/public/JobListPage'
 import JobDetailPage from './pages/public/JobDetailPage'
 import LoginPage from './pages/auth/LoginPage'
@@ -31,18 +34,20 @@ export default function AppRouter() {
       <Routes>
         <Route element={<PublicLayout />}>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/for-companies" element={<ForCompaniesPage />} />
           <Route path="/jobs" element={<JobListPage />} />
           <Route path="/jobs/:id" element={<JobDetailPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
           <Route path="/forbidden" element={<ForbiddenPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
 
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+
         <Route
           element={
             <RequireRole role="job_seeker">
-              <AppLayout />
+              <JobSeekerLayout />
             </RequireRole>
           }
         >
@@ -72,7 +77,7 @@ export default function AppRouter() {
         <Route
           element={
             <RequireRole role="admin">
-              <AppLayout />
+              <AdminLayout />
             </RequireRole>
           }
         >
