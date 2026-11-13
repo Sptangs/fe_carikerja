@@ -26,6 +26,7 @@ dist-ssr
 # Vibe-coding skills
 /.github/skills/
 /.opencode/skill/
+/.agents/skills/
 
 # Editor directories and files
 .vscode/*

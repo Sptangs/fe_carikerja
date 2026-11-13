@@ -25,7 +25,7 @@ export default function AdminLayout() {
       roleLabel="Admin"
       navItems={NAV_ITEMS}
       getPageTitle={getPageTitle}
-      headerLink={{ to: '/jobs', label: 'Lowongan publik' }}
+      headerLink={{ to: '/', label: 'Situs publik' }}
       footerTitle="Panel admin."
       footerNote="Kelola pengguna dan operasional platform dari satu tempat."
     />

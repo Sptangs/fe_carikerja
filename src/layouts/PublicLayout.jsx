@@ -1,12 +1,14 @@
 import { useState } from 'react'
-import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { Link, Outlet, useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/useAuth'
 import { IconArrowUpRight, IconClose, IconLogout, IconMenu } from '../components/icons'
 
 const NAV_ITEMS = [
-  { to: '/', label: 'Beranda', end: true },
-  { to: '/jobs', label: 'Lowongan' },
-  { to: '/for-companies', label: 'Untuk Perusahaan' },
+  { href: '#beranda', label: 'Beranda' },
+  { href: '#tentang-kami', label: 'Tentang Kami' },
+  { href: '#cara-kerja', label: 'Cara Kerja' },
+  { href: '#solusi-perusahaan', label: 'Solusi Perusahaan' },
+  { href: '#testimoni', label: 'Testimoni' },
 ]
 
 function getInitials(name = '') {
@@ -53,20 +55,13 @@ export default function PublicLayout() {
 
           <nav aria-label="Navigasi utama" className="ml-4 hidden items-center gap-1 md:flex">
             {NAV_ITEMS.map((item) => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                end={item.end}
-                className={({ isActive }) =>
-                  `rounded-full px-4 py-2 text-sm font-medium transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e8623a] ${
-                    isActive
-                      ? 'bg-[#0f2a23] text-[#f3efe4]'
-                      : 'text-[#10251f]/65 hover:bg-[#0f2a23]/5 hover:text-[#10251f]'
-                  }`
-                }
+              <a
+                key={item.href}
+                href={item.href}
+                className="rounded-full px-3 py-2 text-xs font-medium text-[#10251f]/70 transition hover:bg-[#0f2a23]/5 hover:text-[#10251f] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e8623a] lg:px-3.5 lg:text-sm"
               >
                 {item.label}
-              </NavLink>
+              </a>
             ))}
           </nav>
 
@@ -122,21 +117,14 @@ export default function PublicLayout() {
           <div className="border-t border-[#e3ddcf] bg-[#f3efe4] px-4 py-4 md:hidden">
             <nav aria-label="Navigasi seluler" className="space-y-1">
               {NAV_ITEMS.map((item) => (
-                <NavLink
-                  key={item.to}
-                  to={item.to}
-                  end={item.end}
+                <a
+                  key={item.href}
+                  href={item.href}
                   onClick={() => setMenuOpen(false)}
-                  className={({ isActive }) =>
-                    `block rounded-xl px-4 py-3 text-sm font-semibold transition ${
-                      isActive
-                        ? 'bg-[#0f2a23] text-[#f3efe4]'
-                        : 'text-[#10251f]/70 hover:bg-[#0f2a23]/5'
-                    }`
-                  }
+                  className="block rounded-xl px-4 py-3 text-sm font-semibold text-[#10251f]/70 transition hover:bg-[#0f2a23]/5"
                 >
                   {item.label}
-                </NavLink>
+                </a>
               ))}
               {user ? null : (
                 <Link
@@ -174,14 +162,9 @@ export default function PublicLayout() {
             </p>
             <ul className="mt-4 space-y-2.5 text-sm text-[#f3efe4]/70">
               <li>
-                <Link to="/" className="transition hover:text-[#f3efe4]">
-                  Beranda
-                </Link>
-              </li>
-              <li>
-                <Link to="/jobs" className="transition hover:text-[#f3efe4]">
-                  Daftar lowongan
-                </Link>
+                <a href="#tentang-kami" className="transition hover:text-[#f3efe4]">
+                  Tentang Kami
+                </a>
               </li>
               <li>
                 <Link to="/register" className="transition hover:text-[#f3efe4]">
@@ -197,9 +180,9 @@ export default function PublicLayout() {
             </p>
             <ul className="mt-4 space-y-2.5 text-sm text-[#f3efe4]/70">
               <li>
-                <Link to="/for-companies" className="transition hover:text-[#f3efe4]">
-                  Pasang lowongan
-                </Link>
+                <a href="#solusi-perusahaan" className="transition hover:text-[#f3efe4]">
+                  Solusi perusahaan
+                </a>
               </li>
               <li>
                 <Link to="/login" className="transition hover:text-[#f3efe4]">

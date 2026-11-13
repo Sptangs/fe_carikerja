@@ -186,6 +186,16 @@ frontend/
 - Dev: Vite proxy `/api` -> `http://localhost:8000` (opsional) atau langsung ke `VITE_API_BASE_URL`.
 - Tailwind CSS 4 via `@tailwindcss/vite`.
 
+### Aturan Performa
+
+- Muat halaman dan layout spesifik role dengan `React.lazy()`; bungkus route dengan `Suspense` dan fallback loading yang aksesibel. Jangan import semua halaman route secara statis dari router.
+- Jaga bundle awal hanya untuk shell, autentikasi, dan dependensi yang benar-benar dibutuhkan sebelum route aktif. Import library berat hanya pada halaman yang memakainya.
+- Gunakan pagination/filter dari API untuk daftar besar; jangan mengambil atau merender seluruh data sekaligus. Tunda request sampai layar terkait dibutuhkan dan hindari request duplikat.
+- Optimalkan gambar (format modern, ukuran sesuai tampilan, dimensi eksplisit); lazy-load media di bawah lipatan dan jangan menunda media utama yang menentukan LCP.
+- Hindari animasi/layout yang memicu kerja mahal terus-menerus. Animasi Framer Motion harus terarah dan mendukung `prefers-reduced-motion`.
+- Ukur build produksi dengan `npm run build`; periksa ukuran gzip bundle awal dan chunk route serta selidiki warning chunk besar. Uji navigasi langsung ke route dalam dan kondisi jaringan lambat.
+- Tambahkan memoization atau virtualisasi hanya bila profiling menunjukkan bottleneck; verifikasi bahwa optimasi tidak merusak interaksi atau aksesibilitas.
+
 ## 6. Autentikasi dan Keamanan
 
 - Token dari login/register disimpan di **memori + `sessionStorage`** (bukan `localStorage`).
@@ -209,18 +219,18 @@ frontend/
 
 ## 8. Fase Implementasi dan Kriteria Selesai
 
-1. **Verifikasi kontrak API**: cek endpoint public jobs & CORS dengan curl. Selesai bila response sesuai tabel.
+1. **Verifikasi kontrak API**: cek autentikasi, endpoint role, dan CORS dengan curl. Selesai bila response sesuai tabel.
 2. **Scaffold**: Vite + React + Tailwind + router + `apiClient` + layout. Selesai bila app jalan dan halaman placeholder tampil.
 3. **Auth**: login/register/logout, guard role, restore sesi. Selesai bila redirect per role benar dan 401/403 tertangani.
 4. **Publik**: landing informasional dengan pengenalan website serta bagian terpisah untuk pencari kerja dan company. Selesai bila navigasi informasi dan CTA menuju alur role yang tepat; tidak ada pencarian atau daftar lowongan di area publik.
 5. **Job seeker**: dashboard, lamar, riwayat, profil/CV. Selesai bila upload/unduh/hapus CV dan lamaran berjalan.
 6. **Company**: dashboard, profil, CRUD lowongan, pelamar, terima/tolak, unduh CV, export Excel. Selesai bila otorisasi kepemilikan terjaga.
 7. **Admin**: dashboard, daftar/detail/buat user. Selesai bila filter role/pagination berjalan.
-8. **Polish & build**: a11y, responsif, error state, `npm run build`. Selesai bila build sukses dan alur utama lolos uji manual.
+8. **Polish & build**: a11y, responsif, error state, lazy loading route, dan `npm run build`. Selesai bila build sukses tanpa warning chunk yang belum ditinjau, chunk awal terukur, dan alur utama lolos uji manual.
 
 ## 9. Pertanyaan Terbuka dan Dependensi Backend
 
-- **Wajib**: tambah `GET /api/jobs` dan `GET /api/jobs/{job}` publik (hanya `open`, dengan `company`, plus `meta.locations`).
+- Landing publik bersifat informasional dan tidak membutuhkan endpoint daftar/detail lowongan publik; pencarian lowongan tersedia di area job seeker.
 - Opsional: endpoint agregat lamaran company, update/delete user admin.
 - Kebijakan masa berlaku token dan origin produksi untuk CORS.
 - Konfirmasi perilaku upload CV via `_method=PUT`.

@@ -7,9 +7,6 @@ const AppLayout = lazy(() => import('./layouts/AppLayout'))
 const AdminLayout = lazy(() => import('./layouts/AdminLayout'))
 const JobSeekerLayout = lazy(() => import('./layouts/JobSeekerLayout'))
 const LandingPage = lazy(() => import('./pages/public/LandingPage'))
-const ForCompaniesPage = lazy(() => import('./pages/public/ForCompaniesPage'))
-const JobListPage = lazy(() => import('./pages/public/JobListPage'))
-const JobDetailPage = lazy(() => import('./pages/public/JobDetailPage'))
 const LoginPage = lazy(() => import('./pages/auth/LoginPage'))
 const RegisterPage = lazy(() => import('./pages/auth/RegisterPage'))
 const JobSeekerDashboardPage = lazy(() => import('./pages/job-seeker/DashboardPage'))
@@ -53,16 +50,13 @@ export default function AppRouter() {
       <Suspense fallback={<RouteLoadingFallback />}>
         <Routes>
           <Route element={<PublicLayout />}>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/for-companies" element={<ForCompaniesPage />} />
-          <Route path="/jobs" element={<JobListPage />} />
-          <Route path="/jobs/:id" element={<JobDetailPage />} />
-          <Route path="/forbidden" element={<ForbiddenPage />} />
-          <Route path="*" element={<NotFoundPage />} />
+            <Route path="/" element={<LandingPage />} />
           </Route>
 
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/forbidden" element={<ForbiddenPage />} />
+          <Route path="*" element={<NotFoundPage />} />
 
         <Route
           element={

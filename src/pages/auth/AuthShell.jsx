@@ -15,11 +15,12 @@ const COPY = {
 
 export default function AuthShell({ variant = 'login', title, description, children, footer }) {
   const copy = COPY[variant] ?? COPY.login
+  const contentWidth = 'w-full max-w-[980px] lg:max-w-[1050px] xl:max-w-[1120px]'
 
   return (
     <div className="min-h-svh bg-[#f3efe4] text-[#10251f]">
-      <div className="mx-auto grid min-h-svh w-full max-w-[1440px] lg:grid-cols-[1.05fr_0.95fr]">
-        <aside className="relative hidden overflow-hidden bg-[#0f2a23] px-10 py-10 text-[#f3efe4] lg:flex lg:flex-col lg:justify-between xl:px-16 xl:py-14">
+      <div className="mx-auto grid min-h-svh w-full max-w-[1700px] xl:grid-cols-[0.94fr_1.06fr]">
+        <aside className="relative hidden overflow-hidden bg-[#0f2a23] px-10 py-10 text-[#f3efe4] xl:flex xl:flex-col xl:justify-between xl:px-16 xl:py-14">
           <div aria-hidden="true" className="pointer-events-none absolute inset-0">
             <div className="absolute -right-24 -top-24 h-80 w-80 rounded-full bg-[#e8623a]/30 blur-3xl" />
             <div className="absolute -bottom-40 -left-24 h-[28rem] w-[28rem] rounded-full bg-[#9dc36b]/20 blur-3xl" />
@@ -54,14 +55,14 @@ export default function AuthShell({ variant = 'login', title, description, child
           </div>
         </aside>
 
-        <main className="flex min-h-svh items-center justify-center px-4 py-10 sm:px-8">
-          <div className="auth-rise w-full max-w-md">
-            <Link to="/" className="mb-8 inline-flex items-baseline gap-1 lg:hidden">
+        <main className="flex min-h-svh items-center justify-center px-4 py-8 sm:px-8 lg:px-10 xl:px-12">
+          <div className={`auth-rise w-full ${contentWidth}`}>
+            <Link to="/" className="mb-8 inline-flex items-baseline gap-1 xl:hidden">
               <span className="font-display text-2xl font-bold tracking-tight">CariKerja</span>
               <span className="text-2xl font-bold text-[#e8623a]">.</span>
             </Link>
 
-            <div className="rounded-2xl border border-[#e3ddcf] bg-white/75 p-6 shadow-[0_24px_70px_-36px_rgba(16,37,31,0.45)] backdrop-blur sm:p-8">
+            <div className="rounded-[30px] border border-[#e3ddcf] bg-white/80 p-6 shadow-[0_24px_80px_-38px_rgba(16,37,31,0.52)] backdrop-blur-sm transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[0_30px_90px_-36px_rgba(16,37,31,0.62)] sm:p-8 lg:p-10 xl:p-12">
               <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#e8623a]">
                 {variant === 'register' ? 'Daftar' : 'Masuk'}
               </p>

@@ -1,5 +1,5 @@
-import { useRef, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useRef } from 'react'
+import { Link } from 'react-router-dom'
 import {
   MotionConfig,
   motion,
@@ -7,15 +7,24 @@ import {
   useScroll,
   useTransform,
 } from 'framer-motion'
-import { IconArrowUpRight, IconSearch } from '../../components/icons'
+import { IconArrowUpRight } from '../../components/icons'
 
-const CATEGORIES = [
-  { label: 'Teknologi', note: 'Engineering, data, produk', query: 'teknologi' },
-  { label: 'Desain', note: 'UI/UX, grafis, riset', query: 'desain' },
-  { label: 'Pemasaran', note: 'Growth, konten, brand', query: 'pemasaran' },
-  { label: 'Keuangan', note: 'Akuntansi, analis, pajak', query: 'keuangan' },
-  { label: 'Operasional', note: 'Supply chain, admin', query: 'operasional' },
-  { label: 'Pendidikan', note: 'Pengajar, kurikulum', query: 'pendidikan' },
+const ABOUT_POINTS = [
+  {
+    number: '01',
+    title: 'Langkah yang lebih jelas',
+    body: 'Pencari kerja dapat melihat lowongan, mengirim lamaran, lalu mengikuti statusnya di satu akun.',
+  },
+  {
+    number: '02',
+    title: 'Proses rekrutmen tertata',
+    body: 'Perusahaan mengelola lowongan dan meninjau pelamar berdasarkan posisi yang dibuka.',
+  },
+  {
+    number: '03',
+    title: 'Informasi dalam satu tempat',
+    body: 'Profil, CV, lowongan, dan aktivitas lamaran tersusun sesuai kebutuhan tiap pengguna.',
+  },
 ]
 
 const STEPS = [
@@ -30,6 +39,31 @@ const STEPS = [
   {
     title: 'Lamar dengan tenang',
     body: 'Kirim lamaran dan pantau statusnya. Semua riwayat ada dalam satu tempat.',
+  },
+]
+
+const COMPANY_FEATURES = [
+  { title: 'Publikasikan lowongan', body: 'Atur posisi, lokasi, tipe kerja, dan informasi gaji.' },
+  { title: 'Tinjau pelamar', body: 'Kelola lamaran dan CV berdasarkan lowongan.' },
+  { title: 'Rekap aktivitas', body: 'Unduh laporan lamaran untuk kebutuhan tim.' },
+]
+
+const COMPANY_STEPS = [
+  'Buat akun dan lengkapi profil perusahaan.',
+  'Publikasikan lowongan dengan informasi yang jelas.',
+  'Tinjau pelamar dan perbarui status lamaran.',
+]
+
+const TESTIMONIALS = [
+  {
+    quote: 'Saya bisa memantau lamaran dan memperbarui profil dari satu tempat.',
+    name: 'Contoh pencari kerja',
+    role: 'Konten demo',
+  },
+  {
+    quote: 'Daftar pelamar per posisi membantu tim kami meninjau kandidat dengan lebih teratur.',
+    name: 'Contoh tim rekrutmen',
+    role: 'Konten demo',
   },
 ]
 
@@ -291,7 +325,7 @@ function CompanyCta() {
   const blobB = useParallax(scrollYProgress, -50, 60)
 
   return (
-    <section className="px-4 pb-20 sm:px-6 lg:px-10">
+    <section id="solusi-perusahaan" className="scroll-mt-24 px-4 pb-20 sm:px-6 lg:px-10">
       <motion.div
         ref={ref}
         initial={{ opacity: 0, y: 56, scale: 0.97 }}
@@ -342,18 +376,18 @@ function CompanyCta() {
               variants={fadeUp}
               className="mt-3 max-w-md text-sm leading-relaxed text-[#f3efe4]/65"
             >
-              Pasang lowongan, kelola pelamar, dan temukan kandidat terbaik. Semua dalam satu
-              panel yang rapi.
+              Susun kebutuhan rekrutmen, tinjau pelamar per posisi, dan ikuti proses seleksi dari
+              panel perusahaan.
             </motion.p>
           </div>
 
           <motion.div variants={fadeUp} className="flex flex-wrap gap-3">
             <motion.div whileHover={{ y: -3 }} whileTap={{ scale: 0.97 }}>
               <Link
-                to="/for-companies"
+                to="/register?role=company"
                 className="inline-flex items-center gap-2 rounded-full bg-[#f3efe4] px-6 py-3 text-sm font-semibold text-[#0f2a23] transition-colors hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e8623a]"
               >
-                Pelajari untuk perusahaan
+                Buat akun perusahaan
                 <IconArrowUpRight className="h-4 w-4" />
               </Link>
             </motion.div>
@@ -367,6 +401,14 @@ function CompanyCta() {
             </motion.div>
           </motion.div>
         </motion.div>
+        <div className="relative mx-auto mt-5 grid w-full max-w-[1240px] gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10 sm:grid-cols-3">
+          {COMPANY_FEATURES.map((feature) => (
+            <article key={feature.title} className="bg-[#0f2a23]/90 p-5 sm:p-6">
+              <h3 className="font-display text-lg font-bold text-[#f3efe4]">{feature.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-[#f3efe4]/60">{feature.body}</p>
+            </article>
+          ))}
+        </div>
       </motion.div>
     </section>
   )
@@ -375,24 +417,11 @@ function CompanyCta() {
 /* ---------- Page ---------- */
 
 export default function LandingPage() {
-  const navigate = useNavigate()
-  const [search, setSearch] = useState('')
-  const [location, setLocation] = useState('')
-
-  function handleSubmit(event) {
-    event.preventDefault()
-    const params = new URLSearchParams()
-    if (search.trim()) params.set('search', search.trim())
-    if (location.trim()) params.set('location', location.trim())
-    const query = params.toString()
-    navigate(query ? `/jobs?${query}` : '/jobs')
-  }
-
   return (
     <MotionConfig reducedMotion="user">
       <div>
         {/* Hero */}
-        <section className="relative overflow-hidden">
+        <section id="beranda" className="scroll-mt-24 relative overflow-hidden">
           <div className="mx-auto grid w-full max-w-[1240px] items-center gap-16 px-4 pb-20 pt-12 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:px-10 lg:pb-28 lg:pt-16">
             <div>
               <motion.span
@@ -416,77 +445,28 @@ export default function LandingPage() {
                   variants={fadeUp}
                   className="mt-6 max-w-lg text-base leading-relaxed text-[#4b5b55] sm:text-lg"
                 >
-                  Cari lowongan yang sesuai dengan keahlianmu, lamar dengan percaya diri, dan
-                  pantau setiap langkah kariermu dari satu tempat.
+                  CariKerja membantu pencari kerja mengelola perjalanan lamaran dan membantu
+                  perusahaan menata proses rekrutmen dalam satu platform.
                 </motion.p>
-
-                <motion.form
-                  variants={fadeUp}
-                  onSubmit={handleSubmit}
-                  className="mt-8 rounded-2xl border border-[#e3ddcf] bg-white/80 p-2.5 shadow-[0_24px_60px_-42px_rgba(16,37,31,0.6)] backdrop-blur transition-[border-color,box-shadow] duration-300 focus-within:border-[#0f2a23]/30 focus-within:shadow-[0_28px_70px_-40px_rgba(16,37,31,0.75)] sm:flex sm:items-center sm:gap-2"
-                >
-                  <div className="flex flex-1 items-center gap-2.5 rounded-xl px-3 py-2.5">
-                    <IconSearch className="h-5 w-5 shrink-0 text-[#7a857f]" />
-                    <label htmlFor="hero-search" className="sr-only">
-                      Kata kunci
-                    </label>
-                    <input
-                      id="hero-search"
-                      type="text"
-                      value={search}
-                      onChange={(event) => setSearch(event.target.value)}
-                      placeholder="Posisi, keahlian, atau perusahaan"
-                      className="w-full bg-transparent text-sm text-[#10251f] placeholder:text-[#9aa39e] focus:outline-none"
-                    />
-                  </div>
-
-                  <div className="flex items-center gap-2.5 border-t border-[#ece7db] px-3 py-2.5 sm:border-l sm:border-t-0">
-                    <span aria-hidden="true" className="h-2 w-2 rounded-full bg-[#e8623a]" />
-                    <label htmlFor="hero-location" className="sr-only">
-                      Lokasi
-                    </label>
-                    <input
-                      id="hero-location"
-                      type="text"
-                      value={location}
-                      onChange={(event) => setLocation(event.target.value)}
-                      placeholder="Lokasi"
-                      className="w-full bg-transparent text-sm text-[#10251f] placeholder:text-[#9aa39e] focus:outline-none sm:w-32"
-                    />
-                  </div>
-
-                  <motion.button
-                    type="submit"
-                    whileHover={{ y: -2 }}
-                    whileTap={{ scale: 0.97 }}
-                    className="mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-[#0f2a23] px-5 py-3 text-sm font-semibold text-[#f3efe4] transition-colors hover:bg-[#173b31] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e8623a] sm:mt-0 sm:w-auto"
-                  >
-                    Cari lowongan
-                    <IconArrowUpRight className="h-4 w-4" />
-                  </motion.button>
-                </motion.form>
 
                 <motion.div
                   variants={fadeUp}
-                  className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-[#6b7671]"
+                  className="mt-8 flex flex-wrap gap-3"
                 >
-                  {['Lowongan terkurasi', 'Tanpa biaya', 'CV aman'].map((item) => (
-                    <span key={item} className="inline-flex items-center gap-1.5">
-                      <IconCheck className="h-4 w-4 text-[#3f5a2a]" />
-                      {item}
-                    </span>
-                  ))}
-                </motion.div>
-
-                <motion.p variants={fadeUp} className="mt-6 text-xs text-[#6b7671]">
-                  Kamu perusahaan?{' '}
                   <Link
-                    to="/for-companies"
-                    className="font-semibold text-[#0f2a23] underline decoration-[#e8623a] decoration-2 underline-offset-4 transition-colors hover:text-[#e8623a]"
+                    to="/register"
+                    className="inline-flex items-center gap-2 rounded-full bg-[#0f2a23] px-6 py-3 text-sm font-semibold text-[#f3efe4] transition hover:bg-[#173b31] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e8623a]"
                   >
-                    Lihat solusi rekrutmen
+                    Mulai sebagai pencari kerja
+                    <IconArrowUpRight className="h-4 w-4" />
                   </Link>
-                </motion.p>
+                  <a
+                    href="#solusi-perusahaan"
+                    className="inline-flex items-center gap-2 rounded-full border border-[#0f2a23]/20 bg-white/60 px-6 py-3 text-sm font-semibold text-[#10251f] transition hover:border-[#0f2a23]/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e8623a]"
+                  >
+                    Solusi perusahaan
+                  </a>
+                </motion.div>
               </motion.div>
             </div>
 
@@ -496,72 +476,40 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Kategori */}
-        <section className="border-y border-[#e3ddcf] bg-[#efeadb]">
+        {/* Tentang Kami */}
+        <section id="tentang-kami" className="scroll-mt-24 border-y border-[#e3ddcf] bg-[#efeadb]">
           <div className="mx-auto w-full max-w-[1240px] px-4 py-16 sm:px-6 lg:px-10 lg:py-20">
+            <Reveal className="max-w-2xl">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-[#e8623a]">
+                Tentang Kami
+              </p>
+              <h2 className="mt-3 font-display text-3xl font-bold tracking-tight text-[#10251f] sm:text-4xl">
+                Proses karier yang terasa lebih terarah.
+              </h2>
+              <p className="mt-4 max-w-xl text-sm leading-relaxed text-[#4b5b55] sm:text-base">
+                CariKerja mempertemukan kebutuhan pencari kerja dan perusahaan lewat alur yang
+                mudah dipahami. Setiap orang mendapat ruang kerja yang sesuai dengan perannya.
+              </p>
+            </Reveal>
+
             <motion.div
-              variants={stagger(0.1)}
+              variants={stagger(0.1, 0.12)}
               initial="hidden"
               whileInView="show"
               viewport={VIEWPORT}
-              className="flex flex-wrap items-end justify-between gap-4"
+              className="mt-10 grid gap-4 md:grid-cols-3"
             >
-              <div>
-                <motion.p
-                  variants={fadeUp}
-                  className="text-[11px] font-semibold uppercase tracking-[0.25em] text-[#e8623a]"
-                >
-                  Jelajahi
-                </motion.p>
-                <motion.h2
-                  variants={fadeUp}
-                  className="mt-3 max-w-xl font-display text-3xl font-bold tracking-tight text-[#10251f] sm:text-4xl"
-                >
-                  Mulai dari bidang yang kamu kuasai.
-                </motion.h2>
-              </div>
-              <motion.div variants={fadeUp}>
-                <Link
-                  to="/jobs"
-                  className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#0f2a23] transition-colors hover:text-[#e8623a]"
-                >
-                  Lihat semua lowongan
-                  <IconArrowUpRight className="h-4 w-4" />
-                </Link>
-              </motion.div>
-            </motion.div>
-
-            <motion.div
-              variants={stagger(0.07, 0.1)}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true, amount: 0.15 }}
-              className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
-            >
-              {CATEGORIES.map((category, index) => (
+              {ABOUT_POINTS.map((point) => (
                 <motion.div
-                  key={category.label}
+                  key={point.number}
                   variants={fadeUp}
-                  whileHover={{ y: -6 }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 22 }}
+                  className="border-t-2 border-[#0f2a23] bg-[#f7f4eb] p-6 sm:p-7"
                 >
-                  <Link
-                    to={`/jobs?search=${encodeURIComponent(category.query)}`}
-                    className="group flex items-center justify-between rounded-2xl border border-[#e3ddcf] bg-[#f3efe4] p-5 transition-[border-color,box-shadow] duration-300 hover:border-[#0f2a23]/25 hover:shadow-[0_24px_50px_-38px_rgba(16,37,31,0.6)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e8623a]"
-                  >
-                    <div className="flex items-center gap-4">
-                      <span className="grid h-11 w-11 place-items-center rounded-xl bg-white font-display text-sm font-bold text-[#0f2a23] transition-colors duration-300 group-hover:bg-[#0f2a23] group-hover:text-[#f3efe4]">
-                        0{index + 1}
-                      </span>
-                      <div>
-                        <p className="font-display text-lg font-bold tracking-tight text-[#10251f]">
-                          {category.label}
-                        </p>
-                        <p className="text-xs text-[#6b7671]">{category.note}</p>
-                      </div>
-                    </div>
-                    <IconArrowUpRight className="h-4 w-4 text-[#7a857f] transition duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[#e8623a]" />
-                  </Link>
+                  <p className="font-display text-sm font-bold text-[#e8623a]">{point.number}</p>
+                  <h3 className="mt-5 font-display text-xl font-bold tracking-tight text-[#10251f]">
+                    {point.title}
+                  </h3>
+                  <p className="mt-3 text-sm leading-relaxed text-[#4b5b55]">{point.body}</p>
                 </motion.div>
               ))}
             </motion.div>
@@ -569,33 +517,33 @@ export default function LandingPage() {
         </section>
 
         {/* Cara kerja */}
-        <section className="mx-auto w-full max-w-[1240px] px-4 py-16 sm:px-6 lg:px-10 lg:py-24">
+        <section id="cara-kerja" className="scroll-mt-24 mx-auto w-full max-w-[1240px] px-4 py-16 sm:px-6 lg:px-10 lg:py-24">
           <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
             <motion.div
               variants={stagger(0.1)}
               initial="hidden"
               whileInView="show"
               viewport={VIEWPORT}
-              className="lg:sticky lg:top-28 lg:self-start"
+              className="self-start"
             >
               <motion.p
                 variants={fadeUp}
                 className="text-[11px] font-semibold uppercase tracking-[0.25em] text-[#e8623a]"
               >
-                Cara kerja
+                Cara Kerja
               </motion.p>
               <motion.h2
                 variants={fadeUp}
                 className="mt-3 font-display text-3xl font-bold tracking-tight text-[#10251f] sm:text-4xl"
               >
-                Tiga langkah, satu tujuan.
+                Alur yang jelas untuk tiap peran.
               </motion.h2>
               <motion.p
                 variants={fadeUp}
                 className="mt-4 max-w-sm text-sm leading-relaxed text-[#4b5b55]"
               >
-                Kami merapikan proses melamar kerja supaya kamu bisa fokus pada hal yang paling
-                penting: menemukan tempat yang tepat.
+                Pencari kerja dan perusahaan menjalani langkah yang berbeda, dengan status proses
+                yang tetap mudah diikuti.
               </motion.p>
               <motion.div variants={fadeUp} className="mt-8 inline-block">
                 <motion.div whileHover={{ y: -3 }} whileTap={{ scale: 0.97 }}>
@@ -603,46 +551,104 @@ export default function LandingPage() {
                     to="/register"
                     className="inline-flex items-center gap-2 rounded-full bg-[#e8623a] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#d2542f] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0f2a23]"
                   >
-                    Mulai sekarang
+                    Buat akun pencari kerja
                     <IconArrowUpRight className="h-4 w-4" />
                   </Link>
                 </motion.div>
               </motion.div>
             </motion.div>
 
-            <ol className="space-y-4">
-              {STEPS.map((step, index) => (
-                <motion.li
-                  key={step.title}
-                  initial={{ opacity: 0, y: 48 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.4 }}
-                  transition={{ duration: 0.8, ease: EASE }}
-                  whileHover={{ y: -4 }}
-                  className="flex gap-5 rounded-2xl border border-[#e3ddcf] bg-white/60 p-6"
-                >
-                  <motion.span
-                    initial={{ opacity: 0, y: 16 }}
+            <div className="space-y-10">
+              <ol className="space-y-4">
+                {STEPS.map((step, index) => (
+                  <motion.li
+                    key={step.title}
+                    initial={{ opacity: 0, y: 48 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, amount: 0.4 }}
-                    transition={{ duration: 0.6, ease: EASE, delay: 0.2 }}
-                    className="font-display text-3xl font-bold leading-none text-[#9dc36b]"
+                    transition={{ duration: 0.8, ease: EASE }}
+                    whileHover={{ y: -4 }}
+                    className="flex gap-5 rounded-2xl border border-[#e3ddcf] bg-white/60 p-6"
                   >
-                    0{index + 1}
-                  </motion.span>
-                  <div>
-                    <h3 className="font-display text-xl font-bold tracking-tight text-[#10251f]">
-                      {step.title}
-                    </h3>
-                    <p className="mt-1.5 text-sm leading-relaxed text-[#4b5b55]">{step.body}</p>
-                  </div>
-                </motion.li>
-              ))}
-            </ol>
+                    <motion.span
+                      initial={{ opacity: 0, y: 16 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, amount: 0.4 }}
+                      transition={{ duration: 0.6, ease: EASE, delay: 0.2 }}
+                      className="font-display text-3xl font-bold leading-none text-[#9dc36b]"
+                    >
+                      0{index + 1}
+                    </motion.span>
+                    <div>
+                      <h3 className="font-display text-xl font-bold tracking-tight text-[#10251f]">
+                        {step.title}
+                      </h3>
+                      <p className="mt-1.5 text-sm leading-relaxed text-[#4b5b55]">{step.body}</p>
+                    </div>
+                  </motion.li>
+                ))}
+              </ol>
+
+              <div className="border-t border-[#e3ddcf] pt-8">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#e8623a]">
+                Untuk perusahaan
+              </p>
+              <ol className="mt-5 space-y-3">
+                {COMPANY_STEPS.map((step, index) => (
+                  <li key={step} className="flex items-start gap-4">
+                    <span className="font-display text-lg font-bold text-[#0f2a23]">
+                      0{index + 1}
+                    </span>
+                    <p className="pt-0.5 text-sm leading-relaxed text-[#4b5b55]">{step}</p>
+                  </li>
+                ))}
+              </ol>
+              </div>
+            </div>
           </div>
         </section>
 
         <CompanyCta />
+
+        <section id="testimoni" className="scroll-mt-24 border-t border-[#e3ddcf] bg-[#efeadb]">
+          <div className="mx-auto w-full max-w-[1240px] px-4 py-16 sm:px-6 lg:px-10 lg:py-24">
+            <Reveal className="flex flex-wrap items-end justify-between gap-5">
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-[#e8623a]">
+                  Testimoni
+                </p>
+                <h2 className="mt-3 font-display text-3xl font-bold tracking-tight text-[#10251f] sm:text-4xl">
+                  Cerita dari pengguna.
+                </h2>
+              </div>
+              <p className="max-w-sm text-xs leading-relaxed text-[#6b7671]">
+                Konten berikut adalah contoh desain. Ganti dengan testimoni terverifikasi sebelum
+                dipublikasikan.
+              </p>
+            </Reveal>
+
+            <div className="mt-10 grid gap-4 md:grid-cols-2">
+              {TESTIMONIALS.map((testimonial, index) => (
+                <Reveal key={testimonial.name} delay={index * 0.1}>
+                  <figure className="flex h-full flex-col justify-between border border-[#e3ddcf] bg-[#f7f4eb] p-6 sm:p-8">
+                    <blockquote className="font-display text-xl font-semibold leading-relaxed text-[#10251f] sm:text-2xl">
+                      “{testimonial.quote}”
+                    </blockquote>
+                    <figcaption className="mt-8 flex items-center justify-between gap-4 border-t border-[#e3ddcf] pt-4">
+                      <div>
+                        <p className="text-sm font-bold text-[#10251f]">{testimonial.name}</p>
+                        <p className="mt-1 text-xs text-[#6b7671]">{testimonial.role}</p>
+                      </div>
+                      <span className="font-display text-4xl leading-none text-[#e8623a]" aria-hidden="true">
+                        ”
+                      </span>
+                    </figcaption>
+                  </figure>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
       </div>
     </MotionConfig>
   )

@@ -23,6 +23,26 @@ const ROLES = [
   },
 ]
 
+function EyeIcon({ className = 'h-4 w-4' }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={className} aria-hidden="true">
+      <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z" />
+      <circle cx="12" cy="12" r="3" />
+    </svg>
+  )
+}
+
+function EyeOffIcon({ className = 'h-4 w-4' }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={className} aria-hidden="true">
+      <path d="M3 3l18 18" />
+      <path d="M10.6 10.6A2 2 0 0 0 13.4 13.4" />
+      <path d="M9.1 5.5A10.7 10.7 0 0 1 12 5c6.5 0 10 7 10 7a17.7 17.7 0 0 1-4.2 5.2" />
+      <path d="M6.2 6.1A17.8 17.8 0 0 0 2 12s3.5 7 10 7a10.8 10.8 0 0 0 6.1-2" />
+    </svg>
+  )
+}
+
 function PasswordToggle({ visible, onToggle }) {
   return (
     <button
@@ -30,9 +50,9 @@ function PasswordToggle({ visible, onToggle }) {
       onClick={onToggle}
       aria-label={visible ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'}
       aria-pressed={visible}
-      className="rounded-lg px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-[#0f2a23]/60 transition hover:bg-[#0f2a23]/5 hover:text-[#0f2a23] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e8623a]"
+      className="flex h-8 w-8 items-center justify-center rounded-lg text-[#0f2a23]/60 transition hover:bg-[#0f2a23]/5 hover:text-[#0f2a23] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e8623a]"
     >
-      {visible ? 'Sembunyi' : 'Lihat'}
+      {visible ? <EyeOffIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
     </button>
   )
 }
