@@ -1,6 +1,12 @@
 import { Link } from 'react-router-dom'
 import ErrorAlert from '../../components/ErrorAlert'
-import { IconArrowUpRight, IconUsers } from '../../components/icons'
+import {
+  IconArrowUpRight,
+  IconBuilding,
+  IconBriefcase,
+  IconInbox,
+  IconUsers,
+} from '../../components/icons'
 import useApi from '../../hooks/useApi'
 
 const STAT_ITEMS = [
@@ -8,6 +14,33 @@ const STAT_ITEMS = [
   { key: 'company_count', label: 'Perusahaan', note: 'Akun perusahaan' },
   { key: 'job_posting_count', label: 'Lowongan', note: 'Lowongan di platform' },
   { key: 'application_count', label: 'Lamaran', note: 'Total lamaran masuk' },
+]
+
+const SHORTCUTS = [
+  {
+    to: '/admin/users',
+    label: 'Manajemen pengguna',
+    note: 'Cari, filter role, lihat detail, dan buat akun baru.',
+    icon: IconUsers,
+  },
+  {
+    to: '/admin/companies',
+    label: 'Manajemen perusahaan',
+    note: 'Tinjau, ubah profil, dan hapus perusahaan beserta datanya.',
+    icon: IconBuilding,
+  },
+  {
+    to: '/admin/jobs',
+    label: 'Manajemen lowongan',
+    note: 'Filter lowongan, ubah status, dan hapus dengan konfirmasi.',
+    icon: IconBriefcase,
+  },
+  {
+    to: '/admin/applications',
+    label: 'Manajemen lamaran',
+    note: 'Ubah status lamaran dan hapus dengan konfirmasi.',
+    icon: IconInbox,
+  },
 ]
 
 function StatCard({ label, note, value }) {
@@ -69,24 +102,29 @@ export default function DashboardPage() {
             ))}
       </section>
 
-      <section className="mt-8 rounded-2xl border border-[#e3ddcf] bg-white/60 p-6">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <h2 className="font-display text-xl font-bold tracking-tight text-[#10251f]">
-              Manajemen pengguna
-            </h2>
-            <p className="mt-1 text-sm text-[#4b5b55]">
-              Cari, filter berdasarkan role, dan buat akun baru.
-            </p>
-          </div>
-          <Link
-            to="/admin/users"
-            className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#0f2a23] transition hover:text-[#e8623a]"
-          >
-            Buka daftar pengguna
-            <IconArrowUpRight className="h-4 w-4" />
-          </Link>
-        </div>
+      <section className="mt-8 grid gap-4 sm:grid-cols-2">
+        {SHORTCUTS.map((item) => {
+          const Icon = item.icon
+          return (
+            <Link
+              key={item.to}
+              to={item.to}
+              className="group rounded-2xl border border-[#e3ddcf] bg-white/60 p-6 transition hover:border-[#0f2a23]/25 hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e8623a]"
+            >
+              <span className="grid h-11 w-11 place-items-center rounded-xl bg-[#0f2a23] text-[#f3efe4]">
+                <Icon className="h-5 w-5" />
+              </span>
+              <h2 className="mt-4 font-display text-lg font-bold tracking-tight text-[#10251f]">
+                {item.label}
+              </h2>
+              <p className="mt-1 text-sm text-[#4b5b55]">{item.note}</p>
+              <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-[#0f2a23] transition group-hover:text-[#e8623a]">
+                Buka
+                <IconArrowUpRight className="h-4 w-4" />
+              </span>
+            </Link>
+          )
+        })}
       </section>
     </div>
   )
