@@ -8,9 +8,23 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
+node_modules/.cache
 dist
 dist-ssr
+coverage
+.nyc_output
+.vite
+*.tsbuildinfo
 *.local
+
+# Test and browser artifacts
+playwright-report
+test-results
+blob-report
+
+# Generated documentation
+/docs/
+
 # Environment & secrets (jangan pernah di-commit)
 .env
 .env.*
