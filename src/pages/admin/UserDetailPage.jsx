@@ -97,7 +97,6 @@ export default function UserDetailPage() {
             Informasi akun
           </h2>
           <dl className="mt-2">
-            <DetailRow label="ID pengguna" value={user.id} />
             <DetailRow label="Nama" value={user.name} />
             <DetailRow label="Email" value={user.email} />
             <DetailRow label="Role" value={ROLE_LABELS[user.role] ?? user.role} />

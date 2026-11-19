@@ -28,7 +28,7 @@ function validate(values) {
   else if (values.company_name.trim().length < 2)
     next.company_name = "Nama perusahaan minimal 2 karakter.";
 
-  if (values.description && values.description.length > 5000) {
+  if (values.description && values.description.length > 10000) {
     next.description = "Deskripsi terlalu panjang.";
   }
   if (values.address && values.address.length > 5000)

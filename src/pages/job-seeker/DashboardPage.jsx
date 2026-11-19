@@ -32,7 +32,7 @@ export default function DashboardPage() {
   const { user } = useAuth()
   const navigate = useNavigate()
   const [search, setSearch] = useState('')
-  const { data, loading, error } = useApi('/api/job-seeker/dashboard')
+  const { data, loading, error, refetch } = useApi('/api/job-seeker/dashboard')
 
   const latestJobs = Array.isArray(data?.latest_jobs) ? data.latest_jobs : []
   const recentApplications = Array.isArray(data?.recent_applications)
@@ -106,6 +106,13 @@ export default function DashboardPage() {
       {error ? (
         <div className="mt-6">
           <ErrorAlert message="Gagal memuat ringkasan dashboard. Coba muat ulang halaman." />
+          <button
+            type="button"
+            onClick={() => refetch().catch(() => {})}
+            className="mt-4 rounded-full bg-[#0f2a23] px-5 py-2.5 text-sm font-semibold text-[#f3efe4] transition hover:bg-[#173b31] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e8623a]"
+          >
+            Coba lagi
+          </button>
         </div>
       ) : null}
 

@@ -157,7 +157,6 @@ export default function CompanyDetailPage() {
           Ringkasan
         </h2>
         <dl className="mt-2">
-          <DetailRow label="ID perusahaan" value={company.id} />
           <DetailRow label="Pemilik akun" value={owner?.name} />
           <DetailRow label="Email pemilik" value={owner?.email} />
           <DetailRow label="Jumlah lowongan" value={company.jobs_count ?? 0} />
@@ -275,6 +274,7 @@ export default function CompanyDetailPage() {
         title="Hapus perusahaan?"
         description={`Perusahaan "${company.company_name ?? ''}" beserta seluruh lowongan, lamaran terkait, dan akun pemiliknya akan dihapus permanen.`}
         confirmLabel={deleteBusy ? 'Menghapus...' : 'Hapus permanen'}
+        busy={deleteBusy}
         onConfirm={handleDelete}
         onCancel={() => setDeleteOpen(false)}
       />

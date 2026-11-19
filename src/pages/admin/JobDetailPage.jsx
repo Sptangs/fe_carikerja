@@ -236,7 +236,6 @@ export default function JobDetailPage() {
           Ringkasan
         </h2>
         <dl className="mt-2">
-          <DetailRow label="ID lowongan" value={job.id} />
           <DetailRow label="Perusahaan" value={job.company?.company_name} />
           <DetailRow label="Jumlah pelamar" value={job.applications_count ?? 0} />
           <DetailRow
@@ -440,6 +439,7 @@ export default function JobDetailPage() {
         title="Hapus lowongan?"
         description={`Lowongan "${job.title ?? ''}" beserta seluruh lamarannya akan dihapus permanen.`}
         confirmLabel={deleteBusy ? 'Menghapus...' : 'Hapus permanen'}
+        busy={deleteBusy}
         onConfirm={handleDelete}
         onCancel={() => setDeleteOpen(false)}
       />

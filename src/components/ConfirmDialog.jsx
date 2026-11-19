@@ -5,6 +5,7 @@ export default function ConfirmDialog({
   title,
   description,
   confirmLabel = 'Ya',
+  busy = false,
   onConfirm,
   onCancel,
 }) {
@@ -21,7 +22,7 @@ export default function ConfirmDialog({
     function handleKeyDown(event) {
       if (event.key === 'Escape') {
         event.preventDefault()
-        onCancel?.()
+        if (!busy) onCancel?.()
         return
       }
 
@@ -52,7 +53,7 @@ export default function ConfirmDialog({
         previous.focus()
       }
     }
-  }, [open, onCancel])
+  }, [open, onCancel, busy])
 
   if (!open) return null
 
@@ -81,7 +82,8 @@ export default function ConfirmDialog({
           <button
             type="button"
             onClick={onCancel}
-            className="rounded-full border border-[#e3ddcf] bg-white px-4 py-2.5 text-sm font-semibold text-[#10251f]/75 transition hover:border-[#0f2a23]/30 hover:text-[#10251f] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e8623a]"
+            disabled={busy}
+            className="rounded-full border border-[#e3ddcf] bg-white px-4 py-2.5 text-sm font-semibold text-[#10251f]/75 transition hover:border-[#0f2a23]/30 hover:text-[#10251f] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e8623a] disabled:cursor-not-allowed disabled:opacity-50"
           >
             Batal
           </button>
@@ -89,7 +91,8 @@ export default function ConfirmDialog({
             ref={confirmRef}
             type="button"
             onClick={onConfirm}
-            className="rounded-full bg-[#e8623a] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#d2542f] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0f2a23]"
+            disabled={busy}
+            className="rounded-full bg-[#e8623a] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#d2542f] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0f2a23] disabled:cursor-not-allowed disabled:opacity-60"
           >
             {confirmLabel}
           </button>

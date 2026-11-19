@@ -275,9 +275,6 @@ export default function ApplicationListPage() {
                         <p className="truncate text-[#10251f]">
                           {application.job?.title ?? '—'}
                         </p>
-                        <p className="truncate text-xs text-[#6b7671]">
-                          ID {application.job_id ?? application.job?.id ?? '—'}
-                        </p>
                       </td>
                       <td className="px-5 py-4 text-[#4b5b55]">
                         <p className="truncate">
@@ -354,6 +351,7 @@ export default function ApplicationListPage() {
           statusLabels[statusTarget?.application?.status] ?? statusTarget?.application?.status
         }" menjadi "${statusLabels[statusTarget?.nextStatus] ?? statusTarget?.nextStatus}".`}
         confirmLabel={statusBusy ? 'Memproses...' : 'Ubah status'}
+        busy={statusBusy}
         onConfirm={handleStatusChange}
         onCancel={() => setStatusTarget(null)}
       />
@@ -363,6 +361,7 @@ export default function ApplicationListPage() {
         title="Hapus lamaran?"
         description={`Lamaran dari "${applicantName(deleteTarget ?? {})}" akan dihapus permanen. Pengguna dan lowongan tidak ikut terhapus.`}
         confirmLabel={deleteBusy ? 'Menghapus...' : 'Hapus permanen'}
+        busy={deleteBusy}
         onConfirm={handleDelete}
         onCancel={() => setDeleteTarget(null)}
       />

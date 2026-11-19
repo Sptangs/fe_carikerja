@@ -388,6 +388,7 @@ export default function JobListPage() {
         confirmLabel={
           statusBusy ? 'Memproses...' : statusTarget?.status === 'open' ? 'Tutup' : 'Buka'
         }
+        busy={statusBusy}
         onConfirm={handleToggleStatus}
         onCancel={() => setStatusTarget(null)}
       />
@@ -397,6 +398,7 @@ export default function JobListPage() {
         title="Hapus lowongan?"
         description={`Lowongan "${deleteTarget?.title ?? ''}" beserta seluruh lamarannya akan dihapus permanen. Aksi ini tidak bisa dibatalkan.`}
         confirmLabel={deleteBusy ? 'Menghapus...' : 'Hapus permanen'}
+        busy={deleteBusy}
         onConfirm={handleDelete}
         onCancel={() => setDeleteTarget(null)}
       />

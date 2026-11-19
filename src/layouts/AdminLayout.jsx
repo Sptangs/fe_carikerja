@@ -18,7 +18,6 @@ const NAV_ITEMS = [
 const PAGE_TITLES = {
   '/admin/dashboard': 'Dashboard',
   '/admin/users': 'Manajemen Pengguna',
-  '/admin/users/new': 'Tambah Pengguna',
   '/admin/companies': 'Manajemen Perusahaan',
   '/admin/jobs': 'Manajemen Lowongan',
   '/admin/applications': 'Manajemen Lamaran',
@@ -26,7 +25,6 @@ const PAGE_TITLES = {
 
 function getPageTitle(pathname) {
   if (PAGE_TITLES[pathname]) return PAGE_TITLES[pathname]
-  if (pathname.startsWith('/admin/users/')) return 'Detail Pengguna'
   if (pathname.startsWith('/admin/companies/')) return 'Detail Perusahaan'
   if (pathname.startsWith('/admin/jobs/')) return 'Detail Lowongan'
   return 'Panel Admin'

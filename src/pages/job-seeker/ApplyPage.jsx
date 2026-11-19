@@ -1,4 +1,4 @@
-import { useState } from 'react'
+  import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import ErrorAlert from '../../components/ErrorAlert'
 import {
@@ -284,6 +284,7 @@ export default function ApplyPage() {
   }
 
   if (!canApply) {
+    const isClosed = job.status === 'closed'
     return (
       <Shell>
         <BackLink />
@@ -292,18 +293,27 @@ export default function ApplyPage() {
             <IconClose className="h-6 w-6" />
           </span>
           <h1 className="mt-5 font-display text-2xl font-bold text-[#10251f]">
-            Lowongan sudah ditutup.
+            {isClosed ? 'Lowongan sudah ditutup.' : 'Lamaran tidak dapat dikirim.'}
           </h1>
           <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-[#4b5b55]">
-            Lowongan ini tidak lagi menerima lamaran baru. Temukan peluang lain yang mungkin
-            lebih cocok untukmu.
+            {isClosed
+              ? 'Lowongan ini tidak lagi menerima lamaran baru. Temukan peluang lain yang mungkin lebih cocok untukmu.'
+              : 'Lowongan ini belum bisa dilamar saat ini. Cek riwayat lamaranmu atau temukan lowongan lain.'}
           </p>
-          <Link
-            to="/job-seeker/jobs"
-            className="mt-6 inline-block rounded-full bg-[#0f2a23] px-5 py-2.5 text-sm font-semibold text-[#f3efe4] transition hover:bg-[#173a31]"
-          >
-            Cari lowongan lain
-          </Link>
+          <div className="mt-6 flex flex-wrap justify-center gap-2">
+            <Link
+              to="/job-seeker/jobs"
+              className="rounded-full bg-[#0f2a23] px-5 py-2.5 text-sm font-semibold text-[#f3efe4] transition hover:bg-[#173a31]"
+            >
+              Cari lowongan lain
+            </Link>
+            <Link
+              to="/job-seeker/applications"
+              className="rounded-full border border-[#e3ddcf] bg-white/70 px-5 py-2.5 text-sm font-semibold text-[#0f2a23] transition hover:border-[#0f2a23]/30"
+            >
+              Lihat riwayat lamaran
+            </Link>
+          </div>
         </div>
       </Shell>
     )

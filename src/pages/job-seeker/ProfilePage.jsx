@@ -82,7 +82,6 @@ export default function ProfilePage() {
     validate,
     onSubmit: async (formValues) => {
       const body = new FormData()
-      body.append('_method', 'PUT')
       body.append('name', formValues.name.trim())
       body.append('email', formValues.email.trim())
       body.append('phone', formValues.phone?.trim() ?? '')
@@ -91,7 +90,7 @@ export default function ProfilePage() {
       if (formValues.cv) body.append('cv', formValues.cv)
 
       const payload = await apiClient('/api/job-seeker/profile', {
-        method: 'POST',
+        method: 'PUT',
         body,
       })
 
@@ -154,7 +153,7 @@ export default function ProfilePage() {
     setDownloadBusy(true)
     setCvError(null)
     try {
-      await download('/api/job-seeker/profile/cv', 'cv.pdf')
+      await download('/api/job-seeker/profile/cv', 'cv')
     } catch (err) {
       setCvError(err?.message ?? 'Gagal mengunduh CV. Silakan coba lagi.')
     } finally {
@@ -460,6 +459,7 @@ export default function ProfilePage() {
         title="Hapus CV?"
         description="CV yang dihapus tidak bisa dikembalikan. Kamu tetap bisa mengunggah CV baru kapan saja."
         confirmLabel={cvBusy ? 'Menghapus…' : 'Hapus CV'}
+        busy={cvBusy}
         onConfirm={handleDeleteCv}
         onCancel={() => setConfirmDelete(false)}
       />

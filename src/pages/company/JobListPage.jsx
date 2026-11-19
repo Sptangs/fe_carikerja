@@ -205,6 +205,7 @@ export default function JobListPage() {
         title="Tutup lowongan?"
         description={`Lowongan "${closeTarget?.title ?? ''}" tidak lagi menerima lamaran baru. Aksi ini tidak bisa dibatalkan dari UI.`}
         confirmLabel={closeBusy ? 'Menutup...' : 'Tutup lowongan'}
+        busy={closeBusy}
         onConfirm={handleCloseJob}
         onCancel={() => setCloseTarget(null)}
       />

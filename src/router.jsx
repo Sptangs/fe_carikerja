@@ -22,8 +22,6 @@ const CompanyJobFormPage = lazy(() => import('./pages/company/JobFormPage'))
 const ApplicantsPage = lazy(() => import('./pages/company/ApplicantsPage'))
 const AdminDashboardPage = lazy(() => import('./pages/admin/DashboardPage'))
 const UserListPage = lazy(() => import('./pages/admin/UserListPage'))
-const UserDetailPage = lazy(() => import('./pages/admin/UserDetailPage'))
-const UserCreatePage = lazy(() => import('./pages/admin/UserCreatePage'))
 const CompanyListPage = lazy(() => import('./pages/admin/CompanyListPage'))
 const CompanyDetailPage = lazy(() => import('./pages/admin/CompanyDetailPage'))
 const AdminJobListPage = lazy(() => import('./pages/admin/JobListPage'))
@@ -102,8 +100,6 @@ export default function AppRouter() {
         >
           <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
           <Route path="/admin/users" element={<UserListPage />} />
-          <Route path="/admin/users/new" element={<UserCreatePage />} />
-          <Route path="/admin/users/:id" element={<UserDetailPage />} />
           <Route path="/admin/companies" element={<CompanyListPage />} />
           <Route path="/admin/companies/:id" element={<CompanyDetailPage />} />
           <Route path="/admin/jobs" element={<AdminJobListPage />} />

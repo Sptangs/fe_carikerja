@@ -199,9 +199,6 @@ export default function CompanyListPage() {
                             <p className="truncate font-semibold text-[#10251f]">
                               {company.company_name}
                             </p>
-                            <p className="truncate text-xs text-[#6b7671]">
-                              ID {company.id}
-                            </p>
                           </div>
                         </div>
                       </td>
@@ -261,6 +258,7 @@ export default function CompanyListPage() {
         title="Hapus perusahaan?"
         description={`Perusahaan "${deleteTarget?.company_name ?? ''}" beserta seluruh lowongan, lamaran terkait, dan akun pemiliknya akan dihapus permanen. Aksi ini tidak bisa dibatalkan.`}
         confirmLabel={deleteBusy ? 'Menghapus...' : 'Hapus permanen'}
+        busy={deleteBusy}
         onConfirm={handleDelete}
         onCancel={() => setDeleteTarget(null)}
       />

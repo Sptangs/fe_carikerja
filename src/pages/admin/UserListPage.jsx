@@ -1,9 +1,8 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
 import EmptyState from '../../components/EmptyState'
 import ErrorAlert from '../../components/ErrorAlert'
 import Pagination from '../../components/Pagination'
-import { IconArrowUpRight, IconSearch } from '../../components/icons'
+import { IconSearch } from '../../components/icons'
 import { ROLE_LABELS } from '../../auth/roles'
 import { usePaginated } from '../../hooks/usePaginated'
 import { formatDate } from '../../lib/format'
@@ -40,7 +39,7 @@ export default function UserListPage() {
 
   function handleSubmit(event) {
     event.preventDefault()
-    setFilters({ search: search.trim(), role })
+    setFilters({ search: search.trim().slice(0, 100), role })
   }
 
   function handleReset() {
@@ -67,13 +66,6 @@ export default function UserListPage() {
             Cari berdasarkan nama atau email, lalu filter berdasarkan role.
           </p>
         </div>
-        <Link
-          to="/admin/users/new"
-          className="inline-flex items-center gap-2 rounded-full bg-[#0f2a23] px-5 py-2.5 text-sm font-semibold text-[#f3efe4] transition hover:bg-[#173b31] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e8623a]"
-        >
-          Tambah pengguna
-          <IconArrowUpRight className="h-4 w-4" />
-        </Link>
       </header>
 
       <form
@@ -88,6 +80,7 @@ export default function UserListPage() {
           <input
             id="admin-user-search"
             type="text"
+            maxLength={100}
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             placeholder="Cari nama atau email"
@@ -165,9 +158,6 @@ export default function UserListPage() {
                   <th scope="col" className="px-5 py-4">
                     Terdaftar
                   </th>
-                  <th scope="col" className="px-5 py-4 text-right">
-                    Aksi
-                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -192,15 +182,6 @@ export default function UserListPage() {
                     </td>
                     <td className="px-5 py-4 text-[#4b5b55]">{getCompanyName(user)}</td>
                     <td className="px-5 py-4 text-[#6b7671]">{formatDate(user.created_at)}</td>
-                    <td className="px-5 py-4 text-right">
-                      <Link
-                        to={`/admin/users/${user.id}`}
-                        className="inline-flex items-center gap-1.5 rounded-full border border-[#e3ddcf] bg-white px-3 py-1.5 text-xs font-semibold text-[#0f2a23] transition hover:border-[#0f2a23]/30 hover:text-[#e8623a]"
-                      >
-                        Detail
-                        <IconArrowUpRight className="h-3.5 w-3.5" />
-                      </Link>
-                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -210,15 +191,7 @@ export default function UserListPage() {
           <div className="p-6">
             <EmptyState
               title="Belum ada pengguna"
-              description="Coba ubah filter atau tambah pengguna baru."
-              action={
-                <Link
-                  to="/admin/users/new"
-                  className="inline-flex rounded-full bg-[#0f2a23] px-5 py-2.5 text-sm font-semibold text-[#f3efe4]"
-                >
-                  Tambah pengguna
-                </Link>
-              }
+              description="Coba ubah kata kunci atau filter role."
             />
           </div>
         )}

@@ -24,7 +24,7 @@ function getSalary(job) {
 export default function JobCard({ job, to }) {
   const company = getCompanyName(job)
   const employment = EMPLOYMENT_LABELS[job.employment_type] ?? job.employment_type
-  const href = to ?? `/jobs/${job.id}`
+  const href = to ?? `/job-seeker/jobs/${job.id}`
 
   return (
     <Link

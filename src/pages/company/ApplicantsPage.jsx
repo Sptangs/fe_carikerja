@@ -310,6 +310,7 @@ export default function ApplicantsPage() {
               ? 'Terima'
               : 'Tolak'
         }
+        busy={statusBusy}
         onConfirm={handleDecide}
         onCancel={() => setStatusTarget(null)}
       />

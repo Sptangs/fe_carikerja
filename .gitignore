@@ -23,7 +23,9 @@ test-results
 blob-report
 
 # Generated documentation
+/docs/frontend.md
 /docs/
+docs/
 
 # Environment & secrets (jangan pernah di-commit)
 .env
@@ -40,6 +42,8 @@ blob-report
 # Vibe-coding skills
 /.github/skills/
 /.opencode/skill/
+/opencode.json
+/.opencode/opencode.json
 /.agents/skills/
 
 # Editor directories and files

@@ -10,7 +10,7 @@ import { usePaginated } from '../../hooks/usePaginated'
 
 export default function JobListPage() {
   const [searchParams] = useSearchParams()
-  const { data, loading, error, setPage, filters, setFilters } = usePaginated(
+  const { data, loading, error, refetch, setPage, filters, setFilters } = usePaginated(
     '/api/job-seeker/jobs',
     {
       search: searchParams.get('search') ?? '',
@@ -106,7 +106,18 @@ export default function JobListPage() {
         ) : null}
       </div>
 
-      {error ? <ErrorAlert message="Gagal memuat lowongan. Coba lagi sebentar." /> : null}
+      {error ? (
+        <div className="mt-4">
+          <ErrorAlert message="Gagal memuat lowongan. Coba lagi sebentar." />
+          <button
+            type="button"
+            onClick={() => refetch().catch(() => {})}
+            className="mt-4 rounded-full bg-[#0f2a23] px-5 py-2.5 text-sm font-semibold text-[#f3efe4] transition hover:bg-[#173b31] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e8623a]"
+          >
+            Coba lagi
+          </button>
+        </div>
+      ) : null}
 
       {loading ? (
         <LoadingSkeleton rows={4} />
