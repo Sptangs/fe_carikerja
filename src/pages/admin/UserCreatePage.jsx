@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import FormField from '../../components/FormField'
+import PageHeader from '../../components/PageHeader'
 import TextField from '../../components/TextField'
-import apiClient from '../../lib/apiClient'
 import { useForm } from '../../hooks/useForm'
+import apiClient from '../../lib/apiClient'
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -14,7 +15,23 @@ const ROLE_OPTIONS = [
 ]
 
 const SELECT_CLASS =
-  'w-full rounded-xl border border-[#ded8ca] bg-white px-4 py-3 text-sm text-[#10251f] outline-none transition focus:border-[#0f2a23] focus:ring-4 focus:ring-[#0f2a23]/10'
+  'w-full min-h-11 rounded-xl border border-[#ded8ca] bg-white px-4 py-3 text-sm text-[#10251f] outline-none transition focus:border-[#0f2a23] focus:ring-4 focus:ring-[#0f2a23]/10'
+
+function describeError(error) {
+  const server = error?.message?.trim()
+  switch (error?.status) {
+    case 403:
+      return 'Anda tidak berwenang untuk membuat pengguna.'
+    case 409:
+      return server || 'Email sudah terdaftar. Gunakan email lain.'
+    case 429:
+      return 'Terlalu banyak permintaan. Mohon tunggu sebentar lalu coba lagi.'
+    case 500:
+      return 'Gagal menyimpan pengguna. Coba lagi sebentar.'
+    default:
+      return server || 'Terjadi kesalahan. Coba lagi sebentar.'
+  }
+}
 
 function PasswordToggle({ visible, onToggle }) {
   return (
@@ -81,36 +98,31 @@ export default function UserCreatePage() {
           ...(values.role === 'company' ? { company_name: values.company_name.trim() } : {}),
         },
       })
-      navigate('/admin/users', { replace: true })
+      navigate('/admin/users', { replace: true, state: { flash: payload?.message ?? 'Pengguna baru berhasil dibuat.' } })
       return payload
     },
   })
 
   const hasFieldErrors = Object.keys(form.errors).length > 0
-  const generalError = form.error && !hasFieldErrors ? form.error.message : null
+  const generalError = form.error && !hasFieldErrors ? describeError(form.error) : null
 
   return (
     <div className="mx-auto w-full max-w-[900px]">
-      <header>
-        <Link
-          to="/admin/users"
-          className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-[#6b7671] transition hover:text-[#e8623a]"
-        >
-          <span aria-hidden="true">←</span> Daftar pengguna
-        </Link>
-        <p className="mt-5 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#e8623a]">
-          Tambah pengguna
-        </p>
-        <h1 className="mt-2 font-display text-3xl font-bold tracking-tight text-[#10251f] sm:text-4xl">
-          Buat akun baru.
-        </h1>
-        <p className="mt-2 max-w-lg text-sm leading-relaxed text-[#4b5b55]">
-          Tentukan role pengguna. Akun perusahaan wajib menyertakan nama perusahaan.
-        </p>
-      </header>
+      <PageHeader
+        title="Buat pengguna baru"
+        description="Tentukan role pengguna. Akun perusahaan wajib menyertakan nama perusahaan."
+        actions={
+          <Link
+            to="/admin/users"
+            className="inline-flex min-h-11 items-center gap-1.5 rounded-full border border-[#e3ddcf] bg-white px-5 text-sm font-semibold text-[#10251f]/70 transition hover:border-[#0f2a23]/30 hover:text-[#10251f] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e8623a]"
+          >
+            <span aria-hidden="true">←</span> Daftar pengguna
+          </Link>
+        }
+      />
 
       <form
-        className="mt-6 space-y-5 rounded-2xl border border-[#e3ddcf] bg-white/70 p-5 sm:p-6"
+        className="mt-2 space-y-5 rounded-2xl border border-border bg-card p-5 sm:p-6"
         noValidate
         onSubmit={form.handleSubmit}
       >
@@ -159,6 +171,7 @@ export default function UserCreatePage() {
             value={form.values.role}
             onChange={form.handleChange}
             aria-invalid={form.errors.role ? 'true' : undefined}
+            aria-describedby={form.errors.role ? 'role-error' : undefined}
             className={SELECT_CLASS}
           >
             {ROLE_OPTIONS.map((option) => (
@@ -227,14 +240,14 @@ export default function UserCreatePage() {
         <div className="flex flex-wrap items-center justify-end gap-3 border-t border-[#ece7db] pt-5">
           <Link
             to="/admin/users"
-            className="rounded-full border border-[#e3ddcf] bg-white px-5 py-2.5 text-sm font-semibold text-[#10251f]/70 transition hover:border-[#0f2a23]/30 hover:text-[#10251f]"
+            className="inline-flex min-h-11 items-center rounded-full border border-[#e3ddcf] bg-white px-5 text-sm font-semibold text-[#10251f]/70 transition hover:border-[#0f2a23]/30 hover:text-[#10251f] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e8623a]"
           >
             Batal
           </Link>
           <button
             type="submit"
             disabled={form.submitting}
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-[#0f2a23] px-6 py-2.5 text-sm font-semibold text-[#f3efe4] transition hover:bg-[#173b31] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e8623a] disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#0f2a23] px-6 text-sm font-semibold text-[#f3efe4] transition hover:bg-[#173b31] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e8623a] disabled:cursor-not-allowed disabled:opacity-60"
           >
             {form.submitting ? (
               <>

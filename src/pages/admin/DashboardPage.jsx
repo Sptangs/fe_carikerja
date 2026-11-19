@@ -1,69 +1,84 @@
+import { Link } from 'react-router-dom'
 import ErrorAlert from '../../components/ErrorAlert'
+import PageHeader from '../../components/PageHeader'
+import StatCard from '../../components/admin/StatCard'
+import { Button } from '../../components/ui/button'
+import { Skeleton } from '../../components/ui/skeleton'
+import {
+  IconBuilding,
+  IconBriefcase,
+  IconInbox,
+  IconUsers,
+} from '../../components/icons'
 import useApi from '../../hooks/useApi'
 
 const STAT_ITEMS = [
-  { key: 'user_count', label: 'Total pengguna', note: 'Semua akun terdaftar' },
-  { key: 'company_count', label: 'Perusahaan', note: 'Akun perusahaan' },
-  { key: 'job_posting_count', label: 'Lowongan', note: 'Lowongan di platform' },
-  { key: 'application_count', label: 'Lamaran', note: 'Total lamaran masuk' },
+  {
+    key: 'user_count',
+    label: 'Total pengguna',
+    note: 'Semua akun terdaftar',
+    icon: IconUsers,
+  },
+  {
+    key: 'company_count',
+    label: 'Total perusahaan',
+    note: 'Akun perusahaan',
+    icon: IconBuilding,
+  },
+  {
+    key: 'job_posting_count',
+    label: 'Total lowongan',
+    note: 'Lowongan di platform',
+    icon: IconBriefcase,
+  },
+  {
+    key: 'application_count',
+    label: 'Total lamaran',
+    note: 'Total lamaran masuk',
+    icon: IconInbox,
+  },
 ]
-
-function StatCard({ label, note, value }) {
-  return (
-    <div className="rounded-2xl border border-[#e3ddcf] bg-white/70 p-5">
-      <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#7a857f]">{label}</p>
-      <p className="mt-3 font-display text-3xl font-bold tracking-tight text-[#10251f]">
-        {value ?? '—'}
-      </p>
-      <p className="mt-1 text-xs text-[#6b7671]">{note}</p>
-    </div>
-  )
-}
 
 export default function DashboardPage() {
   const { data, loading, error, refetch } = useApi('/api/admin/dashboard')
-  const maxCount = Math.max(
-    ...STAT_ITEMS.map((item) => Number(data?.[item.key] ?? 0)),
-    1,
-  )
 
   return (
     <div className="mx-auto w-full max-w-[1240px]">
-      <header className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#e8623a]">
-            Ringkasan
-          </p>
-          <h1 className="mt-2 font-display text-3xl font-bold tracking-tight text-[#10251f] sm:text-4xl">
-            Dashboard admin.
-          </h1>
-          <p className="mt-2 max-w-xl text-sm leading-relaxed text-[#4b5b55]">
-            Pantau aktivitas platform dan kelola akun pengguna dari satu tempat.
-          </p>
-        </div>
-      </header>
+      <PageHeader
+        title="Dashboard admin"
+        description="Pantau aktivitas platform dan kelola akun pengguna dari satu tempat."
+      />
 
       {error ? (
-        <div className="mt-6">
-          <ErrorAlert message="Gagal memuat statistik admin. Coba muat ulang halaman." />
-          <button
+        <div className="mb-6">
+          <ErrorAlert message="Gagal memuat statistik admin. Coba muat ulang data." />
+          <Button
             type="button"
             onClick={() => refetch().catch(() => {})}
-            className="mt-4 rounded-full bg-[#0f2a23] px-5 py-2.5 text-sm font-semibold text-[#f3efe4] transition hover:bg-[#173b31] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e8623a]"
+            className="mt-4 min-h-11 rounded-full bg-[#0f2a23] px-5 font-semibold text-[#f3efe4] hover:bg-[#173b31]"
           >
             Coba lagi
-          </button>
+          </Button>
         </div>
       ) : null}
 
-      <section className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <section aria-label="Statistik platform" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {loading
-          ? [0, 1, 2, 3].map((item) => (
-              <div key={item} className="h-[8.5rem] animate-pulse rounded-2xl bg-[#e6e0d2]" />
+          ? STAT_ITEMS.map((item) => (
+              <div key={item.key} className="rounded-2xl border border-border bg-card p-5">
+                <div className="flex items-start gap-4">
+                  <Skeleton className="h-11 w-11 rounded-xl" />
+                  <div className="flex-1 space-y-2">
+                    <Skeleton className="h-3 w-24" />
+                    <Skeleton className="h-8 w-16" />
+                  </div>
+                </div>
+              </div>
             ))
           : STAT_ITEMS.map((item) => (
               <StatCard
                 key={item.key}
+                icon={item.icon}
                 label={item.label}
                 note={item.note}
                 value={data?.[item.key]}
@@ -71,39 +86,25 @@ export default function DashboardPage() {
             ))}
       </section>
 
-      <section className="mt-6 rounded-2xl border border-[#e3ddcf] bg-white/70 p-6">
+      <section aria-label="Pintasan" className="mt-6 rounded-2xl border border-border bg-card p-5">
         <h2 className="font-display text-lg font-bold tracking-tight text-[#10251f]">
-          Statistik platform
+          Pintasan
         </h2>
-        <p className="mt-1 text-sm text-[#4b5b55]">
-          Perbandingan total data terdaftar.
-        </p>
-        <ul className="mt-5 space-y-4">
-          {loading
-            ? [0, 1, 2, 3].map((item) => (
-                <li key={item} className="h-10 animate-pulse rounded-lg bg-[#e6e0d2]" />
-              ))
-            : STAT_ITEMS.map((item) => {
-                const value = Number(data?.[item.key] ?? 0)
-                const percent = Math.round((value / maxCount) * 100)
-                return (
-                  <li key={item.key}>
-                    <div className="flex items-baseline justify-between gap-3 text-sm">
-                      <span className="font-medium text-[#10251f]">{item.label}</span>
-                      <span className="font-display font-bold text-[#10251f]">
-                        {data?.[item.key] ?? '—'}
-                      </span>
-                    </div>
-                    <div className="mt-1.5 h-2.5 w-full overflow-hidden rounded-full bg-[#e6e0d2]">
-                      <div
-                        className="h-full rounded-full bg-[#0f2a23] transition-[width] duration-500"
-                        style={{ width: `${percent}%` }}
-                      />
-                    </div>
-                  </li>
-                )
-              })}
-        </ul>
+        <div className="mt-4 flex flex-wrap gap-3">
+          <Button
+            render={<Link to="/admin/users" />}
+            className="min-h-11 rounded-full bg-[#0f2a23] px-6 font-semibold text-[#f3efe4] hover:bg-[#173b31]"
+          >
+            Kelola pengguna
+          </Button>
+          <Button
+            render={<Link to="/admin/users/new" />}
+            variant="outline"
+            className="min-h-11 rounded-full border-[#e3ddcf] bg-white px-6 font-semibold text-[#0f2a23] hover:border-[#0f2a23]/30 hover:text-[#0f2a23]"
+          >
+            Buat pengguna baru
+          </Button>
+        </div>
       </section>
     </div>
   )
