@@ -234,3 +234,4 @@ frontend/
 - Opsional: endpoint agregat lamaran company, update/delete user admin.
 - Kebijakan masa berlaku token dan origin produksi untuk CORS.
 - Konfirmasi perilaku upload CV via `_method=PUT`.
+
