@@ -14,33 +14,40 @@
 
 ### Publik
 
-Landing -> daftar lowongan publik -> detail lowongan -> daftar/masuk untuk melamar.
+Landing page `/` menjadi satu-satunya halaman website publik. Landing memperkenalkan CariKerja, dengan bagian untuk pencari kerja dan bagian informasi company yang terpisah secara visual. Tidak ada fitur pencarian atau daftar/detail lowongan pada area publik.
 
 ### Job Seeker
 
-Daftar/masuk -> dashboard -> cari & filter lowongan -> detail -> lamar (wajib CV) -> riwayat lamaran -> profil & CV.
+Daftar/masuk -> dashboard di `/job-seeker/dashboard` -> cari & filter lowongan di area seeker -> detail -> lamar (wajib CV) -> riwayat lamaran -> profil & CV. Pencarian lowongan hanya tersedia di area seeker setelah login.
 
 ### Company
 
-Masuk -> dashboard -> profil perusahaan -> kelola lowongan (buat/ubah/tutup) -> lihat pelamar per lowongan -> terima/tolak -> unduh CV -> unduh laporan Excel.
+Bagian informasi company pada landing publik -> daftar/masuk -> panel company di `/company/*` -> profil perusahaan -> kelola lowongan (buat/ubah/tutup) -> lihat pelamar per lowongan -> terima/tolak -> unduh CV -> unduh laporan Excel.
 
 ### Admin
 
 Masuk -> dashboard statistik -> daftar user (cari/filter role) -> detail user -> buat user.
 
+### Arah Tampilan per Area
+
+- **Admin:** gunakan pola dashboard admin pada umumnya: navigasi panel yang jelas, ringkasan statistik, tabel, filter, dan aksi pengelolaan user. Prioritaskan kepadatan informasi dan efisiensi kerja.
+- **Company:** gunakan pola panel operasional yang familier seperti admin, tetapi seluruh navigasi dan kontennya khusus untuk profil perusahaan, lowongan, dan pelamar. Informasi company ditampilkan pada bagian tersendiri di landing publik, terpisah dari panel `/company/*`. Jangan tampilkan menu atau data administrasi user platform.
+- **Job seeker:** gunakan area khusus `/job-seeker/*` untuk dashboard, pencarian, detail, proses lamaran, riwayat, dan profil. Pencarian tidak tersedia di landing publik.
+- **Publik/global:** hanya ada landing page `/`; jangan sediakan fitur pencarian, daftar lowongan, atau detail lowongan publik. Susun informasi website menjadi bagian yang terpisah untuk pencari kerja dan company. Header publik berisi identitas dan navigasi informasi website, bukan kolom pencarian; aksi masuk/daftar boleh menjadi CTA.
+- **Motion dan desain:** gunakan Framer Motion untuk animasi yang terarah pada landing (misalnya reveal konten saat masuk viewport dan transisi antarbagian). Jaga hierarki informasi, tipografi, kontras, responsivitas, dan aksesibilitas; dukung `prefers-reduced-motion` dan hindari animasi dekoratif berlebihan.
+- Gunakan fondasi visual bersama seperlunya, tetapi pertahankan shell, navigasi, konteks, dan konten yang berbeda untuk admin, company, job seeker, dan publik. Komponen lintas area hanya dipakai jika pola serta maknanya memang sama.
+
 ## 3. Halaman dan Navigasi
 
 | Route | Akses | Aksi utama |
 |---|---|---|
-| `/` | Publik | Landing, CTA cari lowongan/masuk |
-| `/jobs` | Publik | Daftar lowongan, search + filter lokasi, paginasi |
-| `/jobs/:id` | Publik | Detail lowongan, CTA melamar |
-| `/login` | Publik | Masuk |
-| `/register` | Publik | Daftar sebagai job seeker/company |
+| `/` | Publik | Satu-satunya landing publik; informasi website dengan bagian pencari kerja dan company yang terpisah |
+| `/login` | Guest | Masuk |
+| `/register` | Guest | Daftar sebagai job seeker/company |
 | `/job-seeker/dashboard` | job_seeker | Ringkasan, lowongan terbaru, lamaran terbaru |
-| `/job-seeker/jobs` | job_seeker | Cari lowongan |
+| `/job-seeker/jobs` | job_seeker | Cari lowongan dari area seeker |
 | `/job-seeker/jobs/:id` | job_seeker | Detail + status sudah melamar |
-| `/job-seeker/jobs/:id/apply` | job_seeker | Form lamaran (cover letter) |
+| `/job-seeker/jobs/:id/apply` | job_seeker | Form lamaran (cover letter), wajib memiliki CV |
 | `/job-seeker/applications` | job_seeker | Riwayat lamaran |
 | `/job-seeker/profile` | job_seeker | Profil + upload/hapus CV |
 | `/company/dashboard` | company | Statistik + pelamar terbaru |
@@ -55,7 +62,9 @@ Masuk -> dashboard statistik -> daftar user (cari/filter role) -> detail user ->
 | `/admin/users/:id` | admin | Detail user |
 | `*` | Publik | 404 |
 
-Guard: `RequireRole` membaca `user.role`; salah role -> `/forbidden`; belum login -> `/login`.
+Guard: `RequireRole` membaca `user.role`; salah role -> `/forbidden`; belum login -> `/login`. Setelah login, arahkan pengguna ke dashboard sesuai role (`/job-seeker/dashboard`, `/company/dashboard`, atau `/admin/dashboard`), bukan ke landing publik.
+
+Landing `/` adalah satu-satunya route website publik. Semua route `/job-seeker/*` dilindungi `RequireRole` dan digunakan untuk pencarian lowongan, detail, lamaran, serta data pribadi seeker. Prefix `/api/job-seeker` digunakan oleh endpoint backend.
 
 ## 4. Peta Integrasi API
 
@@ -69,13 +78,6 @@ Envelope umum: sukses `{ "data": ... }`, pesan `{ "message": "...", "data": ... 
 | POST | `/api/auth/login` | Publik | `email`, `password` | 200 `{message, data:{user, token}}`; 401 |
 | POST | `/api/auth/logout` | Bearer | - | 200 `{message}` |
 | GET | `/api/user` | Bearer | - | Objek user (`id`, `name`, `email`, `role`) |
-
-### Lowongan Publik (perlu ditambah di backend)
-
-| Method | Path | Akses | Input | Response |
-|---|---|---|---|---|
-| GET | `/api/jobs` | Publik | `search`, `location`, `page` | `{data: paginator, meta:{locations, search, location}}`, hanya `open` |
-| GET | `/api/jobs/{job}` | Publik | - | `{data:{job}}` dengan `company`; 404 jika closed/tidak ada |
 
 ### Job Seeker
 
@@ -155,7 +157,9 @@ frontend/
       RequireRole.jsx
     layouts/
       PublicLayout.jsx
-      AppLayout.jsx       # sidebar/nav per role
+      AppLayout.jsx       # panel company
+      AdminLayout.jsx     # panel admin
+      JobSeekerLayout.jsx # area job seeker
     components/
       PageHeader.jsx
       Pagination.jsx
@@ -166,9 +170,9 @@ frontend/
       ConfirmDialog.jsx
       FormField.jsx
     pages/
-      public/{LandingPage,JobListPage,JobDetailPage}.jsx
+      public/LandingPage.jsx
       auth/{LoginPage,RegisterPage}.jsx
-      job-seeker/{DashboardPage,ApplicationsPage,ProfilePage}.jsx
+      job-seeker/{DashboardPage,JobListPage,JobDetailPage,ApplyPage,ApplicationsPage,ProfilePage}.jsx
       company/{DashboardPage,ProfilePage,JobListPage,JobFormPage,ApplicantsPage}.jsx
       admin/{DashboardPage,UserListPage,UserDetailPage,UserCreatePage}.jsx
       NotFoundPage.jsx
@@ -176,9 +180,21 @@ frontend/
 ```
 
 - Router: `react-router-dom`.
+- Gunakan layout terpisah untuk publik, company, admin, dan job seeker; jangan menumpuk konten atau navigasi antar-role dalam satu dashboard.
+- Gunakan Framer Motion untuk animasi landing page publik; paket sudah tersedia di dependencies.
 - Data fetching: `fetch` + hook `useApi`/`usePaginated` (TanStack Query hanya jika disetujui).
 - Dev: Vite proxy `/api` -> `http://localhost:8000` (opsional) atau langsung ke `VITE_API_BASE_URL`.
 - Tailwind CSS 4 via `@tailwindcss/vite`.
+
+### Aturan Performa
+
+- Muat halaman dan layout spesifik role dengan `React.lazy()`; bungkus route dengan `Suspense` dan fallback loading yang aksesibel. Jangan import semua halaman route secara statis dari router.
+- Jaga bundle awal hanya untuk shell, autentikasi, dan dependensi yang benar-benar dibutuhkan sebelum route aktif. Import library berat hanya pada halaman yang memakainya.
+- Gunakan pagination/filter dari API untuk daftar besar; jangan mengambil atau merender seluruh data sekaligus. Tunda request sampai layar terkait dibutuhkan dan hindari request duplikat.
+- Optimalkan gambar (format modern, ukuran sesuai tampilan, dimensi eksplisit); lazy-load media di bawah lipatan dan jangan menunda media utama yang menentukan LCP.
+- Hindari animasi/layout yang memicu kerja mahal terus-menerus. Animasi Framer Motion harus terarah dan mendukung `prefers-reduced-motion`.
+- Ukur build produksi dengan `npm run build`; periksa ukuran gzip bundle awal dan chunk route serta selidiki warning chunk besar. Uji navigasi langsung ke route dalam dan kondisi jaringan lambat.
+- Tambahkan memoization atau virtualisasi hanya bila profiling menunjukkan bottleneck; verifikasi bahwa optimasi tidak merusak interaksi atau aksesibilitas.
 
 ## 6. Autentikasi dan Keamanan
 
@@ -203,18 +219,19 @@ frontend/
 
 ## 8. Fase Implementasi dan Kriteria Selesai
 
-1. **Verifikasi kontrak API**: cek endpoint public jobs & CORS dengan curl. Selesai bila response sesuai tabel.
+1. **Verifikasi kontrak API**: cek autentikasi, endpoint role, dan CORS dengan curl. Selesai bila response sesuai tabel.
 2. **Scaffold**: Vite + React + Tailwind + router + `apiClient` + layout. Selesai bila app jalan dan halaman placeholder tampil.
 3. **Auth**: login/register/logout, guard role, restore sesi. Selesai bila redirect per role benar dan 401/403 tertangani.
-4. **Publik**: landing, daftar lowongan (search/filter/paginasi), detail. Selesai bila data dari `/api/jobs` tampil dan state lengkap.
+4. **Publik**: landing informasional dengan pengenalan website serta bagian terpisah untuk pencari kerja dan company. Selesai bila navigasi informasi dan CTA menuju alur role yang tepat; tidak ada pencarian atau daftar lowongan di area publik.
 5. **Job seeker**: dashboard, lamar, riwayat, profil/CV. Selesai bila upload/unduh/hapus CV dan lamaran berjalan.
 6. **Company**: dashboard, profil, CRUD lowongan, pelamar, terima/tolak, unduh CV, export Excel. Selesai bila otorisasi kepemilikan terjaga.
 7. **Admin**: dashboard, daftar/detail/buat user. Selesai bila filter role/pagination berjalan.
-8. **Polish & build**: a11y, responsif, error state, `npm run build`. Selesai bila build sukses dan alur utama lolos uji manual.
+8. **Polish & build**: a11y, responsif, error state, lazy loading route, dan `npm run build`. Selesai bila build sukses tanpa warning chunk yang belum ditinjau, chunk awal terukur, dan alur utama lolos uji manual.
 
 ## 9. Pertanyaan Terbuka dan Dependensi Backend
 
-- **Wajib**: tambah `GET /api/jobs` dan `GET /api/jobs/{job}` publik (hanya `open`, dengan `company`, plus `meta.locations`).
+- Landing publik bersifat informasional dan tidak membutuhkan endpoint daftar/detail lowongan publik; pencarian lowongan tersedia di area job seeker.
 - Opsional: endpoint agregat lamaran company, update/delete user admin.
 - Kebijakan masa berlaku token dan origin produksi untuk CORS.
 - Konfirmasi perilaku upload CV via `_method=PUT`.
+

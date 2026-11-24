@@ -2,11 +2,18 @@ import { Link } from 'react-router-dom'
 
 export default function NotFoundPage() {
   return (
-    <div className="mx-auto max-w-md px-4 py-20 text-center">
-      <p className="text-5xl font-bold text-slate-900">404</p>
-      <p className="mt-2 text-slate-600">Halaman tidak ditemukan.</p>
-      <Link to="/" className="mt-6 inline-block rounded-md bg-blue-600 px-5 py-2.5 text-white">
-        Kembali ke Beranda
+    <div className="mx-auto w-full max-w-md px-4 py-24 text-center">
+      <p className="font-display text-7xl font-bold tracking-tight text-[#0f2a23]">
+        4<span className="text-[#e8623a]">0</span>4
+      </p>
+      <p className="mt-4 text-sm leading-relaxed text-[#4b5b55]">
+        Halaman yang kamu cari tidak ditemukan atau sudah dipindahkan.
+      </p>
+      <Link
+        to="/"
+        className="mt-8 inline-flex items-center gap-2 rounded-full bg-[#0f2a23] px-6 py-3 text-sm font-semibold text-[#f3efe4] transition hover:bg-[#173b31]"
+      >
+        Kembali ke beranda
       </Link>
     </div>
   )

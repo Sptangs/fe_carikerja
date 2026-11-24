@@ -8,16 +8,43 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
+node_modules/.cache
 dist
 dist-ssr
+coverage
+.nyc_output
+.vite
+*.tsbuildinfo
 *.local
+
+# Test and browser artifacts
+playwright-report
+test-results
+blob-report
+
+# Generated documentation
+/docs/frontend.md
+/docs/
+docs/
+
+# Environment & secrets (jangan pernah di-commit)
 .env
 .env.*
 !.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+.htpasswd
+.vercel
+.netlify
 
 # Vibe-coding skills
 /.github/skills/
 /.opencode/skill/
+/opencode.json
+/.opencode/opencode.json
+/.agents/skills/
 
 # Editor directories and files
 .vscode/*
