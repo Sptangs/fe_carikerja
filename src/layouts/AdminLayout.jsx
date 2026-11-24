@@ -3,8 +3,11 @@ import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-do
 import { ChevronDownIcon } from 'lucide-react'
 import { useAuth } from '../auth/useAuth'
 import {
+  IconBriefcase,
+  IconBuilding,
   IconClose,
   IconDashboard,
+  IconInbox,
   IconLogout,
   IconMenu,
   IconUsers,
@@ -12,6 +15,7 @@ import {
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -22,17 +26,25 @@ import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '../components/ui/
 const NAV_ITEMS = [
   { to: '/admin/dashboard', label: 'Dashboard', icon: IconDashboard, end: true },
   { to: '/admin/users', label: 'Pengguna', icon: IconUsers },
+  { to: '/admin/companies', label: 'Perusahaan', icon: IconBuilding },
+  { to: '/admin/jobs', label: 'Lowongan', icon: IconBriefcase },
+  { to: '/admin/applications', label: 'Lamaran', icon: IconInbox },
 ]
 
 const PAGE_TITLES = {
   '/admin/dashboard': 'Dashboard',
   '/admin/users': 'Daftar Pengguna',
   '/admin/users/new': 'Buat Pengguna',
+  '/admin/companies': 'Manajemen Perusahaan',
+  '/admin/jobs': 'Manajemen Lowongan',
+  '/admin/applications': 'Manajemen Lamaran',
 }
 
 function getPageTitle(pathname) {
   if (PAGE_TITLES[pathname]) return PAGE_TITLES[pathname]
   if (pathname.startsWith('/admin/users/')) return 'Detail Pengguna'
+  if (pathname.startsWith('/admin/companies/')) return 'Detail Perusahaan'
+  if (pathname.startsWith('/admin/jobs/')) return 'Detail Lowongan'
   return 'Panel Admin'
 }
 
@@ -217,20 +229,22 @@ export default function AdminLayout() {
                   />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" sideOffset={8} className="min-w-56">
-                  <DropdownMenuLabel className="font-medium text-[#10251f]">
-                    <span className="block truncate">{name}</span>
-                    <span className="block truncate text-xs font-normal text-[#6b7671]">
-                      {email}
-                    </span>
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    onClick={handleLogout}
-                    className="cursor-pointer gap-2.5 px-3 py-2.5 text-sm font-semibold text-[#a63f1f] focus:bg-[#e8623a]/10 focus:text-[#a63f1f]"
-                  >
-                    <IconLogout className="h-4 w-4" aria-hidden="true" />
-                    Keluar
-                  </DropdownMenuItem>
+                  <DropdownMenuGroup>
+                    <DropdownMenuLabel className="font-medium text-[#10251f]">
+                      <span className="block truncate">{name}</span>
+                      <span className="block truncate text-xs font-normal text-[#6b7671]">
+                        {email}
+                      </span>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      onClick={handleLogout}
+                      className="cursor-pointer gap-2.5 px-3 py-2.5 text-sm font-semibold text-[#a63f1f] focus:bg-[#e8623a]/10 focus:text-[#a63f1f]"
+                    >
+                      <IconLogout className="h-4 w-4" aria-hidden="true" />
+                      Keluar
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>

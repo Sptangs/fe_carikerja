@@ -24,6 +24,11 @@ const AdminDashboardPage = lazy(() => import('./pages/admin/DashboardPage'))
 const UserListPage = lazy(() => import('./pages/admin/UserListPage'))
 const UserCreatePage = lazy(() => import('./pages/admin/UserCreatePage'))
 const UserDetailPage = lazy(() => import('./pages/admin/UserDetailPage'))
+const CompanyListPage = lazy(() => import('./pages/admin/CompanyListPage'))
+const CompanyDetailPage = lazy(() => import('./pages/admin/CompanyDetailPage'))
+const AdminJobListPage = lazy(() => import('./pages/admin/JobListPage'))
+const AdminJobDetailPage = lazy(() => import('./pages/admin/JobDetailPage'))
+const ApplicationListPage = lazy(() => import('./pages/admin/ApplicationListPage'))
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'))
 const ForbiddenPage = lazy(() => import('./pages/ForbiddenPage'))
 
@@ -99,6 +104,11 @@ export default function AppRouter() {
           <Route path="/admin/users" element={<UserListPage />} />
           <Route path="/admin/users/new" element={<UserCreatePage />} />
           <Route path="/admin/users/:id" element={<UserDetailPage />} />
+          <Route path="/admin/companies" element={<CompanyListPage />} />
+          <Route path="/admin/companies/:id" element={<CompanyDetailPage />} />
+          <Route path="/admin/jobs" element={<AdminJobListPage />} />
+          <Route path="/admin/jobs/:id" element={<AdminJobDetailPage />} />
+          <Route path="/admin/applications" element={<ApplicationListPage />} />
         </Route>
         </Routes>
       </Suspense>
